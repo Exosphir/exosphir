@@ -36,6 +36,12 @@ public class BlockControl : MonoBehaviour {
 	private GameObject theSelectedBlock;
 	private GameObject oldSelectedBlock;
 
+	public AudioClip rotateSound;
+	[Range(0.0f, 1.0f)]
+	public float rotateSoundVolume = 1.0f;
+
+	public AudioSource cubeSoundSource;
+
 	[HideInInspector]
 	public Rect catalogRect;
 
@@ -67,6 +73,9 @@ public class BlockControl : MonoBehaviour {
 		Vector3 visualizerObjectPos = Input.GetKey(input.turnOffSnap)? Grid.SnapToGrid(collisionPoint, Vector3.one * 0.25f) : Grid.SnapToGrid(collisionPoint, Vector3.one * 2.5f);
 		visualizerObjectPos.y = collisionPoint.y;
 		visualizerObject.position = Vector3.Lerp(visualizerObject.position, visualizerObjectPos, Time.deltaTime * moveLerp);
+
+		// Move the sound to the cube
+		cubeSoundSource.transform.position = visualizerObject.position;
 
 		if (visualizerObject.childCount > 0) {
 			Vector3 finalLocal = new Vector3(0.0f, 0.0f, finalRotation.z);
@@ -102,6 +111,11 @@ public class BlockControl : MonoBehaviour {
 			// Using this idea of "steps", allows users using a trackpad or Apple Magic Mouse to rotate with percision
 			scrollwheelSteps = scrollwheelSteps + Mathf.Abs(Input.GetAxis("Mouse ScrollWheel"));
 			if (scrollwheelSteps > 1.0f) {
+				// Play the sound
+				cubeSoundSource.volume = rotateSoundVolume;
+				cubeSoundSource.clip = rotateSound;
+				cubeSoundSource.Play();
+				
 				if (Input.GetKey (input.secondaryRotate)) {
 					finalRotation.z += 15.0f * Mathf.Sign(Input.GetAxis("Mouse ScrollWheel"));
 				} else {

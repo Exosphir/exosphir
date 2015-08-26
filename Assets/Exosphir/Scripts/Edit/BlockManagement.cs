@@ -5,8 +5,6 @@ public class BlockManagement : MonoBehaviour {
 
 	public Transform placedBlocksParent;
 	public Transform pooledBlocksParent;
-	
-	public int[] amountOfEachCategory;
 
 	void Awake () {
 		// Allocate the objects for placement
@@ -20,7 +18,7 @@ public class BlockManagement : MonoBehaviour {
 			for (int b = 0; b < category.childCount; b++) {
 				Transform blockParent = category.GetChild (b);
 				if (blockParent.childCount <= 1) {
-					AllocateMoreObjects(blockParent.GetChild(0).gameObject, c);
+					AllocateMoreObjects(blockParent.GetChild(0).gameObject, BlockCatalog.FindBlock(blockParent.GetChild(0).gameObject.name));
 				}
 			}
 		}
@@ -31,11 +29,6 @@ public class BlockManagement : MonoBehaviour {
 
 	void PreAllocateAllObjects () {
 		BlockCatalog blockCatalog = BlockCatalog.GetInstance();
-		
-		if (amountOfEachCategory.Length != blockCatalog.categories.Count) {
-			Debug.LogError("Amount != Blocks");
-			return;
-		}
 
 		// Go through each cateogry
 		for (int i = 0; i < blockCatalog.categories.Count; i++) {
@@ -52,7 +45,7 @@ public class BlockManagement : MonoBehaviour {
 
 				// Spawn the amount of each block
 				int amount = 0;
-				while (amount < amountOfEachCategory[i]) {
+				while (amount < blockCatalog.categories[i].blocks[j].allocationAmount) {
 					GameObject newlySpawnedThing = GameObject.Instantiate(blockCatalog.categories[i].blocks[j].model, Vector3.zero, Quaternion.identity) as GameObject;
 					newlySpawnedThing.name = blockCatalog.categories[i].blocks[j].model.name;
 					newlySpawnedThing.transform.parent = parent.transform;
@@ -64,12 +57,12 @@ public class BlockManagement : MonoBehaviour {
 		}
 	}
 
-	void AllocateMoreObjects (GameObject obj, int category) {
+	void AllocateMoreObjects (GameObject otherObject, BlockCatalog.Block obj) {
 		int amount = 0;
-		while (amount < amountOfEachCategory[category]) {
-			GameObject newlySpawnedThing = GameObject.Instantiate(obj, Vector3.zero, Quaternion.identity) as GameObject;
-			newlySpawnedThing.name = obj.name;
-			newlySpawnedThing.transform.parent = obj.transform.parent.transform;
+		while (amount < obj.allocationAmount) {
+			GameObject newlySpawnedThing = GameObject.Instantiate(obj.model, Vector3.zero, Quaternion.identity) as GameObject;
+			newlySpawnedThing.name = obj.model.name;
+			newlySpawnedThing.transform.parent = otherObject.transform.parent.transform;
 			newlySpawnedThing.transform.localPosition = Vector3.zero;
 			
 			amount++;

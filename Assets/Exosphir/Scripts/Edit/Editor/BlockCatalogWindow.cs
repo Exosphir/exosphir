@@ -166,6 +166,7 @@ public class BlockCatalogWindow : EditorWindow {
 
 				GUILayout.Label ("Object Settings:", EditorStyles.boldLabel);
 
+				EditorGUILayout.PropertyField(blockToFocusOn.FindPropertyRelative("allocationAmount"));
 				EditorGUILayout.PropertyField(blockToFocusOn.FindPropertyRelative("rotateable"));
 				EditorGUILayout.PropertyField(blockToFocusOn.FindPropertyRelative("scaleable"));
 

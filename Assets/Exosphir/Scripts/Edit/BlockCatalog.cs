@@ -31,6 +31,8 @@ public class BlockCatalog : MonoBehaviour {
 		public bool scaleable = true;
 
 		public int id;
+
+		public int allocationAmount = 10;
 	}
 
 	public List<Category> categories = new List<Category>(1);
