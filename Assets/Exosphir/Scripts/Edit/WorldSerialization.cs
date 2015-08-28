@@ -1,0 +1,4 @@
+﻿namespace Edit {
+    class WorldSerialization {
+    }
+}

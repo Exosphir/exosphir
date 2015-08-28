@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Edit.Backend;
 using UnityEngine;
 
-namespace EditMode {
+namespace Edit {
     [RequireComponent(typeof(Grid))]
     class EditorWorld : SingletonBehaviour<EditorWorld> {
         private const float SquareRoot2 = 1.4142135623730950488016887242097f;

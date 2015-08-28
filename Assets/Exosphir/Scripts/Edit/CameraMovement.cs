@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace EditMode {
+namespace Edit {
     public class CameraMovement : MonoBehaviour {
         public Camera Camera;
         public bool EnableZoom = true;

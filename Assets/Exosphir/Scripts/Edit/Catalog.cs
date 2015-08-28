@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Edit.Backend;
 using UnityEngine;
 
-namespace EditMode {
+namespace Edit {
     internal class DummyItem: CatalogItem {
         public DummyItem(int id) {
             Id = id;

@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using Edit.Backend;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace EditMode {
+namespace Edit {
     public class CatalogItemButton : MonoBehaviour {
         public delegate void ClickHandler(CatalogItemButton button);
         public Button Button;

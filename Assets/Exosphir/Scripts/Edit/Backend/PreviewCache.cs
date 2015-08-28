@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace EditMode {
+namespace Edit.Backend {
     [Serializable]
     public struct Resolution {
         public int Width;

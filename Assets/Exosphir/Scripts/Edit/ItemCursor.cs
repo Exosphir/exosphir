@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace EditMode {
+namespace Edit {
     public class ItemCursor : MonoBehaviour {
 
         private GameObject _oldSelected;

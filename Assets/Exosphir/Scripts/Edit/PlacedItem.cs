@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Edit.Backend;
+using UnityEngine;
 
-namespace EditMode {
+namespace Edit {
     public class PlacedItem : MonoBehaviour {
         public bool UniqueInSlot;
-        public CatalogItem CatalogEntry { get; set; }
+        public CatalogItem CatalogEntry;
     }
 }

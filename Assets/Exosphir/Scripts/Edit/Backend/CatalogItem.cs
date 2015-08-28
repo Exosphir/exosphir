@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace EditMode {
+namespace Edit.Backend {
     /// <summary>
     /// Represents a entry in the object catalog.
     /// </summary>

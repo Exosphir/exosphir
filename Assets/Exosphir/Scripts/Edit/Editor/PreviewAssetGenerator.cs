@@ -1,7 +1,9 @@
 ﻿using System.IO;
+using Edit.Backend;
 using UnityEngine;
+using Resolution = Edit.Backend.Resolution;
 
-namespace EditMode.Editor {
+namespace Edit.Editor {
     public static class PreviewAssetGenerator {
         private static readonly string PreviewDestinationRoot = "Assets/Exosphir/Textures/Resources";
         public static void GeneratePreviewToFile(CatalogItem item, Resolution resolution = new Resolution()) {

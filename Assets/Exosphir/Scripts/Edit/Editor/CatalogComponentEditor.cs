@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace EditMode.Editor {
+namespace Edit.Editor {
     [CustomEditor(typeof(Catalog))]
     class CatalogComponentEditor : UnityEditor.Editor {
         public override void OnInspectorGUI() {

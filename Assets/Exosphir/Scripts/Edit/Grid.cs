@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace EditMode {
+namespace Edit {
     public class Grid : MonoBehaviour {
         private static readonly Color GizmoColor = new Color(255, 64, 0);
         public float CellSize = 1f;

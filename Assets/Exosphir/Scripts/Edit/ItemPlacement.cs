@@ -1,8 +1,9 @@
 ﻿using System.Linq;
-using UnityEngine;
+using Edit.Backend;
 using Extensions;
+using UnityEngine;
 
-namespace EditMode {
+namespace Edit {
     [RequireComponent(typeof(CameraMovement))]
     public sealed class ItemPlacement : SingletonBehaviour<ItemPlacement> {
         public CatalogInterface CatalogInterface;

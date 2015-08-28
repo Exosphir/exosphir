@@ -1,8 +1,9 @@
 ﻿using System.Linq;
+using Edit.Backend;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace EditMode {
+namespace Edit {
     public class CatalogInterface : MonoBehaviour {
         private float _width;
         private RectTransform _thisRect;

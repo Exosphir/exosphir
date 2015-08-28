@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Edit;
+using Edit.Backend;
+using EditMode.Editor;
 using UnityEditor;
 using UnityEngine;
 
-namespace EditMode.Editor {
+namespace Edit.Editor {
     public class CatalogWindow : EditorWindow {
         private const float WindowWidth = 900;
 

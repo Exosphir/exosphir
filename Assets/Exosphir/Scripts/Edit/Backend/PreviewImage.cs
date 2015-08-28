@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace EditMode {
+namespace Edit.Backend {
     /// <summary>
     /// A preview image, with a subject and camera positioning.
     /// 

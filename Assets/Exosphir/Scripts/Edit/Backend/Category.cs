@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using UnityEngine;
 
-namespace EditMode {
+namespace Edit.Backend {
     /// <summary>
     /// A category is simply a collection of catalog items, organized sequentially.
     /// </summary>
