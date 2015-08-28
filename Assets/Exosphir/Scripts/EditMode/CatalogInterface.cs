@@ -8,6 +8,8 @@ namespace EditMode {
         private RectTransform _thisRect;
         private ObservableCollection<CatalogItem> _observable;
         private Category _currentCategory;
+        private CatalogItem _currentItem;
+        private CatalogItemButton _currentItemButton;
         
         public RectTransform ButtonContainer;
 
@@ -17,22 +19,46 @@ namespace EditMode {
                 _currentCategory = value;
                 _observable = new ObservableCollection<CatalogItem>(_currentCategory.Items);
                 _observable.Updated += RecreateButtons;
+                RecreateButtons();
+            }
+        }
+
+        public CatalogItem CurrentItem {
+            get { return _currentItem; }
+            set {
+                if (_currentCategory.Contains(value)) {
+                    _currentItemButton.Unselect();
+                }
+                _currentItem = value;
+                CurrentCategory = value.Category;
             }
         }
 
         private void RecreateButtons() {
-            var catalogComponent = Catalog.GetInstance();
-            //delete all buttons
+            var catalog = Catalog.GetInstance();
             foreach (Transform child in ButtonContainer) {
-                Destroy(child);
+                Destroy(child.gameObject);
             }
             foreach (var item in Catalog.GetInstance()) {
-                var button = Instantiate(catalogComponent.ButtonTemplate);
-                button.name = "Button " + item.Name;
-                var image = button.transform.GetChild(0).GetComponent<RawImage>();
+                var buttonObject = Instantiate(catalog.ButtonTemplate.gameObject);
+                buttonObject.name = "Button " + item.Name;
+                var image = buttonObject.transform.GetChild(0).GetComponent<RawImage>();
                 image.texture = item.GetDefaultPreview();
-                button.transform.SetParent(ButtonContainer, false);
+                buttonObject.transform.SetParent(ButtonContainer, false);
+                buttonObject.GetComponent<RectTransform>().sizeDelta = Vector2.one * catalog.UiItemWidth;
+
+                var button = buttonObject.GetComponent<CatalogItemButton>();
+                button.Click += ButtonClicked;
+                button.Item = item;
+                if (item == _currentItem) {
+                    button.Select();
+                }
             }
+        }
+
+        private void ButtonClicked(CatalogItemButton button) {
+            _currentItemButton = button;
+            CurrentItem = button.Item;
         }
 
         public void Start() {

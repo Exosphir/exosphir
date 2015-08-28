@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Runtime.Serialization;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace EditMode {
-    [Serializable]
-    public struct Resolution {
-        public int Width;
-        public int Height;
-
-        public Resolution(int width, int height) {
-            Width = width;
-            Height = height;
-        }
-    }
     /// <summary>
     /// A preview image, with a subject and camera positioning.
     /// 
@@ -24,7 +13,7 @@ namespace EditMode {
     /// To obtain a image of this composition, see <see cref="RenderPreview"/>
     /// </summary>
     [Serializable]
-    public class PreviewImage {
+    public class PreviewImage: ScriptableObject {
         /// <summary>
         /// A distant position to take the render, for minimal interference with whatever else is on the scene.
         /// </summary>
@@ -37,19 +26,11 @@ namespace EditMode {
         private const int OverscaleRender = 4;
         private static readonly Color MatteColor = new Color(0, 0, 0, 0);
         
-        [SerializeField]
-        private readonly CatalogItem _subject;
-        
-        public float DistanceToPivot { get; set; }
-        public Vector3 PivotPosition { get; set; }
-        public Quaternion PivotRotation { get; set; }
+        [SerializeField] CatalogItem _subject;
 
-        public PreviewImage(CatalogItem subject) {
-            if (subject == null) {
-                throw new ArgumentNullException("subject");
-            }
-            _subject = subject;
-        }
+        public float DistanceToPivot = 5;
+        public Vector3 PivotPosition = Vector3.zero;
+        public Quaternion PivotRotation = Quaternion.Euler(-45, 45, 0);
 
         /// <summary>
         /// Sets up a copy of the subject, and creates a image from a camera positioned according to this instance's values
@@ -109,13 +90,19 @@ namespace EditMode {
             //cleanup
             RenderTexture.active = null;
             camera.targetTexture = null;
-            Object.DestroyImmediate(output);
-            Object.DestroyImmediate(cameraObject);
-            Object.DestroyImmediate(pivot);
-            Object.DestroyImmediate(objectToRender);
+            DestroyImmediate(output);
+            DestroyImmediate(cameraObject);
+            DestroyImmediate(pivot);
+            DestroyImmediate(objectToRender);
 
 
             return image;
+        }
+
+        public static PreviewImage Create(CatalogItem subject) {
+            var preview = CreateInstance<PreviewImage>();
+            preview._subject = subject;
+            return preview;
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 namespace EditMode {
@@ -9,16 +10,18 @@ namespace EditMode {
     /// A category is simply a collection of catalog items, organized sequentially.
     /// </summary>
     [Serializable]
-    public class Category: IEnumerable<CatalogItem> {
+    public class Category: ScriptableObject, IEnumerable<CatalogItem> {
         public static readonly string DefaultCategoryName = "Misc";
 
         public static Category DefaultCategory {
             get { return GetOrCreate(DefaultCategoryName); }
         }
         [SerializeField]
-        private readonly List<CatalogItem> _items;
+        private List<CatalogItem> _items;
 
         public string Name;
+        public int PooledPerItem = 5;
+        public int PoolFillWhenDry = 5;
 
         public ReadOnlyCollection<CatalogItem> Items {
             get {
@@ -27,8 +30,13 @@ namespace EditMode {
         }
 
         private Category(string name) {
-            _items = new List<CatalogItem>();
             Name = name;
+        }
+
+        void OnEnable() {
+            if (_items == null) {
+                _items = new List<CatalogItem>();
+            }
         }
         
         /// <summary>
@@ -56,22 +64,14 @@ namespace EditMode {
         /// <returns>The category</returns>
         public static Category GetOrCreate(string name) {
             var catalog = Catalog.GetInstance();
-            if (!catalog.Categories.ContainsKey(name)) {
-                var category = new Category(name);
-                catalog.Categories[name] = category;
+            var category = catalog.Categories.FirstOrDefault(cat => cat.Name == name);
+            // ReSharper disable once SimplifyLinqExpression
+            if (category == null) {
+                category = CreateInstance<Category>();
+                category.Name = name;
+                catalog.Categories.Add(category);
             }
-            return catalog.Categories[name];
-        }
-
-        /// <summary>
-        /// Renames the category, updating the catalog in the process
-        /// </summary>
-        /// <param name="newName">The new name of this category</param>
-        public void Rename(string newName) {
-            var catalog = Catalog.GetInstance();
-            catalog.Categories.Remove(Name);
-            Name = newName;
-            catalog.Categories[Name] = this;
+            return category;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace EditMode {
         /// to the default category
         /// </summary>
         public void Destroy() {
-            Catalog.GetInstance().Categories.Remove(Name);
+            Catalog.GetInstance().Categories.Remove(this);
             foreach (var item in this) {
                 item.Category = DefaultCategory;
             }

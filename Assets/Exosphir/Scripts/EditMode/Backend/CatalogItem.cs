@@ -7,7 +7,7 @@ namespace EditMode {
     /// Represents a entry in the object catalog.
     /// </summary>
     [Serializable]
-    public class CatalogItem {
+    public class CatalogItem : ScriptableObject {
         public static readonly Resolution DefaultPreviewResolution = new Resolution(256, 256);
         [Serializable]
         public class Comparer : IComparer<CatalogItem> {
@@ -18,9 +18,9 @@ namespace EditMode {
         
         public GameObject Model;
         public PreviewImage PreviewImage;
-        public bool Rotatable;
-        public bool Scalable;
-        public int Id;
+        public bool Rotatable = true;
+        public bool Scalable = true;
+        public int Id = -1;
         
         [SerializeField]
         private  Category _category;
@@ -52,9 +52,10 @@ namespace EditMode {
             return preview ?? Catalog.GetInstance().NullTexture;
         }
 
-        public CatalogItem() {
-            PreviewImage = new PreviewImage(this);
-            Id = -1;
+        void OnEnable() {
+            if (PreviewImage == null) {
+                PreviewImage = PreviewImage.Create(this);
+            }
         }
     }
 }

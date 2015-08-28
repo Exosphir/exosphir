@@ -8,6 +8,9 @@ namespace EditMode.Editor {
             if (resolution.Width == 0 || resolution.Height == 0) {
                 resolution = CatalogItem.DefaultPreviewResolution;
             }
+            if (item.Model == null) {
+                return;
+            }
             var resourcePath = PreviewCache.GetPathFor(resolution, item);
             var fullPath = Path.Combine(PreviewDestinationRoot, resourcePath);
             var folder = Path.GetDirectoryName(fullPath);

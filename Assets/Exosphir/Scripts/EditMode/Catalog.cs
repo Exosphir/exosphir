@@ -9,32 +9,41 @@ namespace EditMode {
         public DummyItem(int id) {
             Id = id;
         }
+
+        public static DummyItem Create(int id) {
+            var dummy = CreateInstance<DummyItem>();
+            dummy.Id = id;
+            return dummy;
+        }
     }
     /// <summary>
     /// Manages a list of edit mode objects.
     /// </summary>
     [Serializable]
-    public class Catalog : MonoBehaviour, IEnumerable<CatalogItem>, ISerializationCallbackReceiver {
+    public sealed class Catalog : SingletonBehaviour<Catalog>, IEnumerable<CatalogItem>, ISerializationCallbackReceiver {
         private static Catalog _instance;
 
-        public GameObject ButtonTemplate;
+        public CatalogItemButton ButtonTemplate;
         public Texture2D NullTexture;
-        public float UiWidth = 3f;
-        public int UiItemsPerRow = 2;
+        public float UiWidth = 215f;
+        public int UiItemWidth = 100;
 
-        private readonly CatalogItem.Comparer _comparer;
+        private static readonly CatalogItem.Comparer Comparer = new CatalogItem.Comparer();
         /// <summary>
         /// All registered catalog items, must be always sorted by ID.
         /// </summary>
         [SerializeField]
-        private readonly List<CatalogItem> _items;
+        private List<CatalogItem> _items;
 
-        public Dictionary<string, Category> Categories;
+        public List<Category> Categories;
 
-        private Catalog() {
-            Categories = new Dictionary<string, Category>();
-            _items = new List<CatalogItem>();
-            _comparer = new CatalogItem.Comparer();
+        void OnEnable() {
+            if (Categories == null) {
+                Categories = new List<Category>();
+            }
+            if (_items == null) {
+                _items = new List<CatalogItem>();
+            }
         }
 
 
@@ -53,7 +62,7 @@ namespace EditMode {
         /// <param name="id">The ID of the item to be fetched</param>
         /// <returns>The item</returns>
         public CatalogItem GetItemById(int id) {
-            var index = _items.BinarySearch(new DummyItem(id), _comparer);
+            var index = _items.BinarySearch(new DummyItem(id), Comparer);
             return _items[index];
         }
 
@@ -72,7 +81,7 @@ namespace EditMode {
         /// </summary>
         /// <param name="item">The item to be inserted</param>
         public void AddItem(CatalogItem item) {
-            var index = _items.BinarySearch(new DummyItem(item.Id), _comparer);
+            var index = _items.BinarySearch(DummyItem.Create(item.Id), Comparer);
             //"otherwise, a negative number that is the bitwise complement of the 
             //index of the next element that is larger than item or, if there is
             //no larger element, the bitwise complement of Count."
@@ -100,7 +109,7 @@ namespace EditMode {
         /// </summary>
         /// <param name="id">ID of the item to remove</param>
         public void RemoveItemById(int id) {
-            var index = _items.BinarySearch(new DummyItem(id), _comparer);
+            var index = _items.BinarySearch(new DummyItem(id), Comparer);
             if (index > 0) {
                 var item = _items[index];
                 item.Category.Remove(item);
@@ -137,19 +146,6 @@ namespace EditMode {
                 }
                 item.Category = Category.GetOrCreate(catName);
             }
-        }
-
-        public static Catalog GetInstance() {
-            var catalogs = FindObjectsOfType<Catalog>();
-            if (catalogs.Length == 1) {
-                return catalogs[0];
-            }
-            if (catalogs.Length > 1) {
-                Debug.LogError("Too many catalogs in scene, unpredictable behaviour! Returning first.");
-                return catalogs[0];
-            }
-            Debug.LogError("No catalogs found in scene!");
-            return null;
         }
 
         public IEnumerator<CatalogItem> GetEnumerator() {

@@ -5,6 +5,16 @@ using UnityEngine;
 
 namespace EditMode {
     [Serializable]
+    public struct Resolution {
+        public int Width;
+        public int Height;
+
+        public Resolution(int width, int height) {
+            Width = width;
+            Height = height;
+        }
+    }
+
     public class PreviewCache {
         private const string PreviewResourcePath = "BlockPreviewImages";
         private static readonly Dictionary<Resolution, PreviewCache> CachesByResolution = new Dictionary<Resolution, PreviewCache>();
@@ -50,7 +60,8 @@ namespace EditMode {
             if (item.Model == null) {
                 return null;
             }
-            return Path.Combine(folder, string.Format("{0}.png", item.Model.name));
+            var path = Path.Combine(folder, string.Format("{0}.png", item.Model.name));
+            return path.Replace('\\', '/');
         }
 
         public static PreviewCache GetForResolution(int width, int height) {
