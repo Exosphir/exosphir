@@ -102,7 +102,7 @@ Material:
       data:
         first:
           name: _Glossiness
-        second: .370000005
+        second: .256999999
       data:
         first:
           name: _BumpScale
@@ -130,7 +130,7 @@ Material:
       data:
         first:
           name: _RimPower
-        second: 7.30999994
+        second: 3.5999999
     m_Colors:
       data:
         first:
@@ -143,4 +143,4 @@ Material:
       data:
         first:
           name: _RimColor
-        second: {r: .683823526, g: .829918861, b: 1, a: 0}
+        second: {r: 1, g: .669878483, b: .316176474, a: .628000021}
