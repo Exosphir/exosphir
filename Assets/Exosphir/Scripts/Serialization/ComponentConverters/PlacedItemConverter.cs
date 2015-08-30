@@ -12,7 +12,6 @@ namespace Serialization.ComponentConverters {
         }
         public Component DeserializeAndAdd(ComponentData input, GameObject item) {
             var data = (PlacedItemData) input;
-            Debug.Log(data.Id);
             var catalogItem = Catalog.GetInstance().GetItemById(data.Id);
             var component = item.AddComponent<PlacedItem>();
             component.CatalogEntry = catalogItem;

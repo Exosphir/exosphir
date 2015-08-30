@@ -23,13 +23,13 @@ namespace Edit {
             return new Rect(center.x - sizeX / 2, center.z - sizeZ / 2, sizeX, sizeZ);
         }
 
-        public Vector3 Snap(Vector3 position) {
+        public Vector3 Snap(Vector3 position, float gridVerticalOffset = 0) {
             var rect = GetHorizontalPlaneRect();
             var snapX = Mathf.Round(position.x / CellSize) * CellSize;
             var snapZ = Mathf.Round(position.z / CellSize) * CellSize;
             return new Vector3 {
                 x = Mathf.Clamp(snapX, rect.xMin, rect.xMax),
-                y = transform.position.y,
+                y = transform.position.y + gridVerticalOffset,
                 z = Mathf.Clamp(snapZ, rect.yMin, rect.yMax)
             };
         }

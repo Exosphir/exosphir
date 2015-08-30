@@ -19,10 +19,14 @@ namespace Serialization {
     /// </summary>
     public class WorldSerialization : SingletonBehaviour<WorldSerialization> {
         private static readonly Type ConverterType = typeof (IComponentConverter);
+
         /// <summary>
         /// The folder to save the created levels.
         /// </summary>
-        public static readonly string SavePath = Path.Combine(Application.dataPath, "Drafts");
+        public static string SavePath {
+            //is a property otherwise unity complains it is executed out of context
+            get { return Path.Combine(Application.dataPath, "Drafts"); }
+        } 
         /// <summary>
         /// A number indicating a save format version, if it ever changes.
         /// </summary>

@@ -34,7 +34,7 @@ namespace Edit {
                 CurrentCategory = value.Category;
             }
         }
-
+        
         private void RecreateButtons() {
             var catalog = Catalog.GetInstance();
             foreach (Transform child in ButtonContainer) {
@@ -71,6 +71,10 @@ namespace Edit {
 
             RecreateButtons();
         }
-
+        void Update() {
+            var rect = Camera.main.rect;
+            rect.xMin = _width / Screen.width;
+            Camera.main.rect = rect;
+        }
     }
 }
