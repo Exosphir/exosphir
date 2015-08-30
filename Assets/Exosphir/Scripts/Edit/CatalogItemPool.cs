@@ -4,5 +4,5 @@ namespace Edit {
     /// <summary>
     /// Incarnation of GameObjectPool with a key type of CatalogItem.
     /// </summary>
-    class CatalogItemPool : GameObjectPool<CatalogItem> {}
+    public class CatalogItemPool : GameObjectPool<CatalogItem> {}
 }

@@ -63,7 +63,7 @@ namespace Edit {
         /// <param name="id">The ID of the item to be fetched</param>
         /// <returns>The item</returns>
         public CatalogItem GetItemById(int id) {
-            var index = _items.BinarySearch(new DummyItem(id), Comparer);
+            var index = _items.BinarySearch(DummyItem.Create(id), Comparer);
             return _items[index];
         }
 

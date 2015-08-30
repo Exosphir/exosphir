@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Edit;
 using Edit.Backend;
-using EditMode.Editor;
 using UnityEditor;
 using UnityEngine;
 
@@ -28,7 +26,7 @@ namespace Edit.Editor {
         private CatalogItem _currentItem;
         private int _currentCategoryIndex;
         private string[] _categoryNames;
-        private SerializedObject _serialized;
+        private SerializedObject _serializedCatalog;
 
         public void OnFocus() {
             titleContent = new GUIContent("Catalog Editor");
@@ -39,12 +37,12 @@ namespace Edit.Editor {
                 _currentItem = null;
             }
             _catalog = newCatalogComponent?? Catalog.GetInstance();
-            _serialized = new SerializedObject(_catalog);
-            _buttonTemplate = _serialized.FindProperty("ButtonTemplate");
-            _nullTexture = _serialized.FindProperty("NullTexture");
-            _uiWidth = _serialized.FindProperty("UiWidth");
-            _uiItemWidth = _serialized.FindProperty("UiItemWidth");
-            _categories = _serialized.FindProperty("Categories");
+            _serializedCatalog = new SerializedObject(_catalog);
+            _buttonTemplate = _serializedCatalog.FindProperty("ButtonTemplate");
+            _nullTexture = _serializedCatalog.FindProperty("NullTexture");
+            _uiWidth = _serializedCatalog.FindProperty("UiWidth");
+            _uiItemWidth = _serializedCatalog.FindProperty("UiItemWidth");
+            _categories = _serializedCatalog.FindProperty("Categories");
             if (_settingsIcon == null) {
                 _settingsIcon = AssetDatabase.LoadAssetAtPath<Texture>("Assets/Exosphir/Textures/EditorTextures/Settings.png");
             }
@@ -65,6 +63,18 @@ namespace Edit.Editor {
             GUILayout.BeginHorizontal(GUILayout.Width(WindowWidth));
             GUILayout.BeginVertical(GUILayout.Width(WindowWidth / 3));
             EditorGUILayout.Space();
+            if (GUILayout.Button(new GUIContent("Fix Catalog Leaks",
+                                                "Saves the scene and reloads it, cleaning up leaks."))) {
+                EditorApplication.SaveCurrentSceneIfUserWantsTo();
+                if (!EditorApplication.isSceneDirty) {
+                    //only executes if scene has saved
+                    EditorApplication.OpenScene(EditorApplication.currentScene);
+                    OnFocus();
+                    EditorApplication.SaveScene(EditorApplication.currentScene);
+                } else {
+                    Debug.LogWarning("Leak cleanup aborted because scene is not saved");
+                }
+            }
             _showUiProps = EditorGUILayout.Foldout(_showUiProps, "Interface Settings");
             if (_showUiProps) {
                 EditorGUI.indentLevel++;
@@ -94,7 +104,7 @@ namespace Edit.Editor {
             GUILayout.EndVertical();
             
             GUILayout.EndHorizontal();
-            _serialized.ApplyModifiedProperties();
+            _serializedCatalog.ApplyModifiedProperties();
         }
 
 
@@ -109,12 +119,20 @@ namespace Edit.Editor {
 
             if (GUILayout.Button("Add Category")) {
                 var newCategory = CreateInstance<Category>();
-                newCategory.Name = "Category " + _categories.arraySize;
+                var newName = _categories.arraySize > 0
+                               ? "Category " + _categories.arraySize
+                               : Category.DefaultCategoryName;
+                newCategory.Name = newName;
                 _categories.arraySize++;
                 _categories.GetArrayElementAtIndex(_categories.arraySize - 1).objectReferenceValue = newCategory;
+                _currentCategory = newCategory;
             }
+            _generalScrollPos = EditorGUILayout.BeginScrollView(_generalScrollPos);
             foreach (SerializedProperty categoryProp in _categories) {
                 var category = (Category)categoryProp.objectReferenceValue;
+                if (category == null) {
+                    continue;
+                }
                 GUILayout.BeginHorizontal();
                 if (DetailsButton()) {
                     _currentCategory = category;
@@ -137,6 +155,7 @@ namespace Edit.Editor {
 
                 GUILayout.EndHorizontal();
             }
+            EditorGUILayout.EndScrollView();
         }
 
         private void DrawCategoryDetail() {
@@ -167,6 +186,7 @@ namespace Edit.Editor {
             }
             GUILayout.EndHorizontal();
 
+            _detailsScrollPos = EditorGUILayout.BeginScrollView(_detailsScrollPos);
             GUILayout.BeginVertical();
             foreach (var item in _currentCategory) {
                 GUILayout.BeginHorizontal();
@@ -183,6 +203,7 @@ namespace Edit.Editor {
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
 
         private void RefreshItemCategories() {
@@ -209,10 +230,10 @@ namespace Edit.Editor {
             EditorGUI.indentLevel++;
             EditorGUILayout.LabelField("Item ID", _currentItem.Id.ToString());
             EditorGUILayout.LabelField("Has Preview Image", hasOwnPreview.ToString());
-            var newCategoryIndex = EditorGUILayout.Popup("Category", _currentCategoryIndex, _categoryNames);
+            var newCategoryIndex = EditorGUILayout.Popup(_currentCategoryIndex, _categoryNames);
             if (newCategoryIndex != _currentCategoryIndex) {
-                _currentCategoryIndex = newCategoryIndex;
                 _currentItem.Category = Category.GetOrCreate(_categoryNames[newCategoryIndex]);
+                _currentCategoryIndex = newCategoryIndex;
             }
             EditorGUI.indentLevel--;
             GUILayout.EndVertical();

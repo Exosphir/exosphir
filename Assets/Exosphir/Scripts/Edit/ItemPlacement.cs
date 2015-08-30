@@ -68,11 +68,9 @@ namespace Edit {
 
             UpdateMouse();
             UpdateCursor();
-            if (mouseInGame && Input.GetMouseButton(0)) {
-                PlaceCurrentItem();
-            }
-            if (mouseInGame && Input.GetMouseButton(1)) {
-                RemoveItemsAtMouse();
+            if (mouseInGame) {
+                PlaceCurrentItemIfDown();
+                RemoveItemsAtMouseIfDown();
             }
 
             UpdateFloors();
@@ -80,24 +78,33 @@ namespace Edit {
             _camera.EnableZoom = _zoom;
         }
 
-        private void RemoveItemsAtMouse() {
+        private void RemoveItemsAtMouseIfDown() {
+            if (!Input.GetMouseButton(1)) return; //dont remove blocks when rmb isnt pressed
             foreach (var obj in _world.GetObjectsInCell(MouseInGrid)) {
                 _world.Remove(obj);
             }
         }
 
-        private void PlaceCurrentItem() {
-            var here = _world.GetObjectsInCell(MouseInGrid).ToArray();
-            //dont place if there is a UniqueInSlot item here already
-            if (here.Any() && here.First().UniqueInSlot) {
+        private void PlaceCurrentItemIfDown() {
+            if (_currentItem == null) {
                 return;
             }
-            var placed = _world.PlaceItemAt(
-                item: CatalogInterface.CurrentItem, 
-                position: MouseInGrid, 
-                rotation: Quaternion.Euler(ItemRotationEuler), 
-                scale: Scale);
-            placed.UniqueInSlot = _snap;
+            var canPlace = false;
+            var here = _world.GetObjectsInCell(MouseInGrid).ToArray();
+
+            if (Input.GetMouseButtonDown(0) && !_snap) {
+                canPlace = true; //if free place only place on click to evade placing multiple blocks
+            }
+            //dont place if there is a UniqueInSlot item here already and we have snap on
+            if (!canPlace && Input.GetMouseButton(0)) {
+                if (_snap && !(here.Any() && here.First().UniqueInSlot)) {
+                    canPlace = true;
+                }
+            }
+            if (canPlace) {
+                var placed = _world.PlaceItemAt(CatalogInterface.CurrentItem, MouseInGrid, Quaternion.Euler(ItemRotationEuler), Scale);
+                placed.UniqueInSlot = _snap;
+            }
         }
 
         private void UpdateMouse() {

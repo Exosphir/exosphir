@@ -80,7 +80,7 @@ public abstract class GameObjectPool<TKey> : MonoBehaviour {
             FillWithModel(key, storage, dryFillAmount);
             return Get(key, 0);
         }
-        Debug.Log("wtf");
+        Debug.LogError("WTF: Pool empty after filling!");
         return null;
     }
 

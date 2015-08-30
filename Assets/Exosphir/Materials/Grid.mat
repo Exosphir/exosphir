@@ -175,3 +175,7 @@ Material:
         first:
           name: _BackgroundColor
         second: {r: 1, g: 1, b: 1, a: 0}
+      data:
+        first:
+          name: _Offset
+        second: {r: .5, g: 0, b: .5, a: 1}

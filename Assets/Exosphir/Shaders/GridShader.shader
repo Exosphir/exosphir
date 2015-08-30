@@ -1,6 +1,7 @@
 ﻿Shader "Exosphir/Double Grid Shader" {
 	Properties {
 		_CellSize("Cell Size", Float) = 1.0
+		_Offset ("Lines Offset", Vector) = (0, 0, 0)
 		_MainWidth("Main Line Width", Range(0, 1)) = 0.05
 		_MainColor("Main Line Color", Color) = (1,1,1,1)
 		_SecondaryWidth("Secondary Line Width", Range(0, 1)) = 0.02
@@ -32,6 +33,7 @@
 		};
 		
 		uniform float _CellSize;
+		uniform half3 _Offset;
 		uniform float _MainWidth;
 		uniform half4 _MainColor;
 		uniform float _SecondaryWidth;
@@ -52,9 +54,9 @@
 		}
 
 		void surf(Input IN, inout SurfaceOutput o) {
-			
+			half3 pos = IN.worldPos + _Offset;
 			//lines is 0~1 on each axis, tiling every cellsize in object space
-			float2 lines = abs(fmod(abs(IN.worldPos.xz), _CellSize) / _CellSize - float2(.5, .5));
+			half2 lines = abs(fmod(abs(pos.xz), _CellSize) / _CellSize - half2(.5, .5));
 			//make sure lines.x is always the largest axis value
 			if (lines.y > lines.x) { lines = lines.yx; }
 
