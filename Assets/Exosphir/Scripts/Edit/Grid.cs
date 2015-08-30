@@ -1,32 +1,56 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class Grid : MonoBehaviour {
+namespace Edit {
+    public class Grid : MonoBehaviour {
+        private static readonly Color GizmoColor = new Color(255, 64, 0);
+        public float CellSize = 1f;
+        public float BaseSize = 1f;
+        private Renderer _renderer;
 
-	public LineRenderer centerLine1;
-	public LineRenderer centerLine2;
+        void Start() {
+            _renderer = GetComponent<Renderer>();
+        }
 
-	private BlockControl blockControl;
+        void Update() {
+            _renderer.material.SetFloat("_CellSize", CellSize);
+        }
 
-	void Start () {
-		blockControl = BlockControl.GetInstance();
-	}
+        public Rect GetHorizontalPlaneRect() {
+            var scale = transform.localScale;
+            var center = transform.position;
+            var sizeX = scale.x * BaseSize;
+            var sizeZ = scale.z * BaseSize;
+            return new Rect(center.x - sizeX / 2, center.z - sizeZ / 2, sizeX, sizeZ);
+        }
 
-	void Update () {
-		Vector3 newPosition = transform.position;
-		newPosition.y = blockControl.GetLerpedFloorInWorld();
-		transform.position = newPosition;
+        public Vector3 Snap(Vector3 position) {
+            var rect = GetHorizontalPlaneRect();
+            var snapX = Mathf.Round(position.x / CellSize) * CellSize;
+            var snapZ = Mathf.Round(position.z / CellSize) * CellSize;
+            return new Vector3 {
+                x = Mathf.Clamp(snapX, rect.xMin, rect.xMax),
+                y = transform.position.y,
+                z = Mathf.Clamp(snapZ, rect.yMin, rect.yMax)
+            };
+        }
 
-		centerLine1.SetPosition(0, new Vector3(-1250.0f, blockControl.GetLerpedFloorInWorld() - 1.25f, 1.25f));
-		centerLine1.SetPosition(1, new Vector3(1250.0f, blockControl.GetLerpedFloorInWorld() - 1.25f, 1.25f));
+        public bool SharingCell(Vector3 a, Vector3 b) {
+            var halfSize = CellSize;
+            var delta = Snap(b) - Snap(a);
+            return delta.x < halfSize
+                   && delta.y < halfSize
+                   && delta.z < halfSize;
+        }
 
-		centerLine2.SetPosition(0, new Vector3(1.25f, blockControl.GetLerpedFloorInWorld() - 1.25f, -1250.0f));
-		centerLine2.SetPosition(1, new Vector3(1.25f, blockControl.GetLerpedFloorInWorld() - 1.25f, 1250.0f));
-	}
+        public bool Contains(Vector3 point) {
+            return GetHorizontalPlaneRect().Contains(new Vector2(point.x, point.z));
+        }
 
-	static public Vector3 SnapToGrid (Vector3 point, Vector3 gridScale) {
-		return new Vector3(Mathf.Round(point.x / gridScale.x) * gridScale.x,
-		                   Mathf.Round(point.y / gridScale.y) * gridScale.y,
-		                   Mathf.Round(point.z / gridScale.z) * gridScale.z);
-	}
+        void OnDrawGizmosSelected() {
+            Gizmos.color = GizmoColor;
+            var scale = transform.localScale * BaseSize;
+            scale.y = 0;
+            Gizmos.DrawWireCube(transform.position, scale);
+        }
+    }
 }

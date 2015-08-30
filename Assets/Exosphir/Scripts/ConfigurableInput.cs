@@ -1,11 +1,39 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ConfigurableInput : MonoBehaviour {
+public sealed class ConfigurableInput : SingletonBehaviour<ConfigurableInput> {
 
 	// Global inputs
 	public string verticalAxis = "Vertical";
 	public string horizontalAxis = "Horizontal";
+
+    public float vertical {
+        get { return Input.GetAxis(verticalAxis); }
+    }
+
+    public float horizontal {
+        get { return Input.GetAxis(horizontalAxis); }
+    }
+
+    public float scroll {
+        get {
+            var axis = Input.GetAxis("Mouse ScrollWheel");
+            //normalize float
+            var abs = Mathf.Abs(axis);
+            if (abs > 0.01) {
+                axis /= abs;
+            }
+            return axis;
+        }
+    }
+
+    public Vector2 mouse {
+        get {
+            return new Vector2 {
+                x = Input.GetAxis("Mouse X"),
+                y = Input.GetAxis("Mouse Y")
+            };
+        }
+    }
 
 	// Edit inputs
 	public string orbitKey = "Fire2";
@@ -17,17 +45,4 @@ public class ConfigurableInput : MonoBehaviour {
 	public KeyCode rotateKey = KeyCode.R;
 	public KeyCode secondaryRotate = KeyCode.LeftShift;
 	public KeyCode scaleKey = KeyCode.C;
-
-	public static ConfigurableInput GetInstance () {
-		ConfigurableInput[] cI = (ConfigurableInput[])GameObject.FindObjectsOfType(typeof(ConfigurableInput));
-		if (cI != null && cI.Length == 1) {
-			return cI[0];
-		} else if (cI.Length > 1) {
-			Debug.LogError("Too many ConfigurableInputs found");
-			return null;
-		} else {
-			Debug.LogError("No type ConfigurableInput found");
-			return null;
-		}
-	}
 }
