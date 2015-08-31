@@ -110,8 +110,8 @@ namespace Edit.Backend {
         /// </summary>
         /// <param name="obj">The root object</param>
         private static void DisableScriptsInHierarchy(GameObject obj) {
-            foreach (GameObject child in obj.transform) {
-                DisableScriptsInHierarchy(child);
+            foreach (Transform child in obj.transform) {
+                DisableScriptsInHierarchy(child.gameObject);
             }
             foreach (var behaviour in obj.GetComponents<MonoBehaviour>()) {
                 behaviour.enabled = false;
