@@ -25,7 +25,7 @@ public class CharacterPhysicsGroundCheck : MonoBehaviour {
 	}
 
 	void OnTriggerExit (Collider other) {
-		if (other.gameObject.GetInstanceID() == lastGroundObject.gameObject.GetInstanceID()) {
+		if (other.gameObject == lastGroundObject.gameObject) {
 			player.grounded = false;
 
 			player.groundedObject = null;

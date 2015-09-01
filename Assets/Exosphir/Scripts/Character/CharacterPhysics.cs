@@ -15,7 +15,7 @@ public class CharacterPhysics : MonoBehaviour {
 	[Header("In-air Movement")]
 	public Vector2 inAirMovementForce = new Vector2(10.0f, 10.0f);
 	public float inAirMaxStrafeSpeed = 3.0f;
-	public float inAirminimumMaxReverseSpeed = 3.0f;
+	public float inAirMinimumMaxReverseSpeed = 3.0f;
 
 	[Header("Jumping")]
 	public float jumpSpeed = 3.0f;
@@ -57,15 +57,15 @@ public class CharacterPhysics : MonoBehaviour {
 
 		Vector3 inputAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-		// Subtract platform velocity to the current realitive velocity to make sure the character controller doesnt counteract while riding a platform
+		// Subtract platform velocity to the current relative velocity to make sure the character controller doesnt counteract while riding a platform
 		Vector3 platformVelocity = (currentPlatform != null)? currentPlatform.velocity : Vector3.zero;
-		Vector3 realitiveVelocity = transform.InverseTransformDirection(body.velocity - platformVelocity);
-		Vector3 realitiveVelocityNorm = realitiveVelocity.normalized;
+		Vector3 relativeVelocity = transform.InverseTransformDirection(body.velocity - platformVelocity);
+		Vector3 relativeVelocityNorm = relativeVelocity.normalized;
 
 		if (grounded) {
 			// Apply strafe multiplier
 			Vector2 tempInputAxis = inputAxis;
-			inputAxis.x *= diagonalMultiplier;
+			inputAxis.x *= strafeMultiplier;
 			inputAxis = tempInputAxis;
 
 			// Apply diagonal multiplier
@@ -85,9 +85,9 @@ public class CharacterPhysics : MonoBehaviour {
 			Vector2 inputAxisInverseMultiplier = new Vector2(Mathf.Abs(Mathf.Abs(inputAxis.x) - 1.0f), Mathf.Abs(Mathf.Abs(inputAxis.y) - 1.0f));
 
 			// Compute counteracting force
-			// When realitiveVelocity is greater than max speed, always have counteracting force on no matter about the input
-			// Also multiply the realitiveVelocity.normalized to the final outputs to force the body to slow down faster
-			Vector3 counteractingForce = new Vector3((((Mathf.Abs(realitiveVelocity.x) >= maxSpeed.x)? 1.0f : inputAxisInverseMultiplier.x) * counteractForce.x) * realitiveVelocityNorm.x, 0.0f, (((Mathf.Abs(realitiveVelocity.z) >= maxSpeed.y)? 1.0f : inputAxisInverseMultiplier.y) * counteractForce.y) * realitiveVelocityNorm.z);
+			// When relativeVelocity is greater than max speed, always have counteracting force on no matter about the input
+			// Also multiply the relativeVelocity.normalized to the final outputs to force the body to slow down faster
+			Vector3 counteractingForce = new Vector3((((Mathf.Abs(relativeVelocity.x) >= maxSpeed.x)? 1.0f : inputAxisInverseMultiplier.x) * counteractForce.x) * relativeVelocityNorm.x, 0.0f, (((Mathf.Abs(relativeVelocity.z) >= maxSpeed.y)? 1.0f : inputAxisInverseMultiplier.y) * counteractForce.y) * relativeVelocityNorm.z);
 
 			// Collision Magnitude >= max, then output = 1.  Collision Magnitude <= min, then output = 0
 			float collisionMultiplier = Mathf.Abs(((collisionMagnitude - minColMagnitude) / maxColMagnitude) - 1.0f);
@@ -101,10 +101,10 @@ public class CharacterPhysics : MonoBehaviour {
 			}
 
 			// Zero out the counteracting force when the user isnt applying more force, and the body isnt moving, so the counteractingForce doesnt jitter/ping-pong
-			if (inputAxis.x < 1.0f && Mathf.Abs(realitiveVelocity.x) < 1.0f) {
+			if (inputAxis.x < 1.0f && Mathf.Abs(relativeVelocity.x) < 1.0f) {
 				counteractingForce.x = 0.0f;
 			}
-			if (inputAxis.y < 1.0f && Mathf.Abs(realitiveVelocity.z) < 1.0f) {
+			if (inputAxis.y < 1.0f && Mathf.Abs(relativeVelocity.z) < 1.0f) {
 				counteractingForce.z = 0.0f;
 			}
 
@@ -114,22 +114,22 @@ public class CharacterPhysics : MonoBehaviour {
 			// Compute force dir simply like a normal character controller
 			Vector3 forceDir = new Vector3(inputAxis.x * movementForce.x, 0.0f, inputAxis.y * movementForce.y);
 
-			Vector3 realitiveColNormal = transform.InverseTransformDirection(collisionNormal);
+			Vector3 relativeColNormal = transform.InverseTransformDirection(collisionNormal);
 
 			// Apply collision multiplier to forceDir when collided only when its not collision from ground
-			if (colliding && Vector3Round(realitiveColNormal) != Vector3.up) {
+			if (colliding && Vector3Round(relativeColNormal) != Vector3.up) {
 				forceDir *= collisionMultiplier;
 			}
 			// Double forceDir when colliding to ground to help prevent after-jump slow startup
-			if (colliding && Vector3Round(realitiveColNormal) == Vector3.up) {
+			if (colliding && Vector3Round(relativeColNormal) == Vector3.up) {
 				forceDir *= 2.0f;
 			}
 
 			// Attempt to cap the speed of the body at max speed by zeroing out the forceDir
-			if (Mathf.Abs(realitiveVelocity.x) >= maxSpeed.x) {
+			if (Mathf.Abs(relativeVelocity.x) >= maxSpeed.x) {
 				forceDir.x = 0.0f;
 			}
-			if (Mathf.Abs(realitiveVelocity.z) >= maxSpeed.y) {
+			if (Mathf.Abs(relativeVelocity.z) >= maxSpeed.y) {
 				forceDir.z = 0.0f;
 			}
 
@@ -150,11 +150,11 @@ public class CharacterPhysics : MonoBehaviour {
 			Vector3 forceDir = new Vector3(inputAxis.x * inAirMovementForce.x, 0.0f, (Mathf.Sign (inputAxis.y) == -1.0f)? inputAxis.y * inAirMovementForce.y : 0.0f);
 
 			// Caps strafing in mid air
-			if (Mathf.Abs(realitiveVelocity.x) >= inAirMaxStrafeSpeed) {
+			if (Mathf.Abs(relativeVelocity.x) >= inAirMaxStrafeSpeed) {
 				forceDir.x = 0.0f;
 			}
 			// Caps the force so the player cant keep accelerating backwards
-			if (Mathf.Abs(realitiveVelocity.z) <= inAirminimumMaxReverseSpeed) {
+			if (Mathf.Abs(relativeVelocity.z) <= inAirMinimumMaxReverseSpeed) {
 				forceDir.z = 0.0f;
 			}
 

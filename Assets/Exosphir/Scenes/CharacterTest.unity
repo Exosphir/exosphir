@@ -267,11 +267,11 @@ MonoBehaviour:
   movementForce: {x: 25, y: 25}
   counteractForce: {x: -20, y: -20}
   maxSpeed: {x: 5, y: 5}
-  strafeMultiplier: .699999988
-  diagonalMultiplier: .550000012
+  strafeMultiplier: .550000012
+  diagonalMultiplier: .49000001
   inAirMovementForce: {x: 10, y: 10}
   inAirMaxStrafeSpeed: 3
-  inAirminimumMaxReverseSpeed: 3
+  inAirMinimumMaxReverseSpeed: 3
   jumpSpeed: 7
   minColMagnitude: 7
   maxColMagnitude: 10
