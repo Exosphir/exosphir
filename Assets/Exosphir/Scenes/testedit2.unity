@@ -87,6 +87,23 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &248951403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b568de031bda7a04790e36bab0600e0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Model: {fileID: 138032, guid: 7de7a11426deaf74f9f91b92babb7661, type: 2}
+  PreviewImage: {fileID: 809311704}
+  Rotatable: 1
+  Scalable: 1
+  Id: 9
+  _category: {fileID: 355741785}
 --- !u!114 &262055681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +159,7 @@ MonoBehaviour:
   - {fileID: 2064441667}
   - {fileID: 262055681}
   - {fileID: 830526624}
+  - {fileID: 248951403}
   Name: Misc
   PooledPerItem: 10
   PoolFillWhenDry: 5
@@ -455,11 +473,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -474,6 +492,21 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 725807787}
   m_Script: {fileID: 11500000, guid: 092fb6b2937c87047bc214a6f78cf76f, type: 3}
+--- !u!114 &809311704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80040e1a5a15a3645b0179b058bf28f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _subject: {fileID: 248951403}
+  DistanceToPivot: 5
+  PivotPosition: {x: 0, y: 0, z: 0}
+  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
 --- !u!114 &830526624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,6 +806,7 @@ MonoBehaviour:
   - {fileID: 2064441667}
   - {fileID: 262055681}
   - {fileID: 830526624}
+  - {fileID: 248951403}
   Categories:
   - {fileID: 355741785}
 --- !u!114 &1425560095
