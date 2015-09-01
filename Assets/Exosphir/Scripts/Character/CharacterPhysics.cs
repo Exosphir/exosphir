@@ -30,13 +30,14 @@ public class CharacterPhysics : MonoBehaviour {
 
 	[HideInInspector]
 	public bool grounded = false;
+
 	[HideInInspector]
 	public Rigidbody groundedObject;
 
 	bool colliding;
 	float collisionStartTime;
 	float collisionMagnitude;
-	//Vector3 collisionNormal;
+	Vector3 collisionNormal;
 	
 	Rigidbody currentPlatform;
 	Vector3 oldPosPlatform;
@@ -68,7 +69,7 @@ public class CharacterPhysics : MonoBehaviour {
 			inputAxis = tempInputAxis;
 
 			// Apply diagonal multiplier
-			if (inputAxis.x > 0.0f && inputAxis.y > 0.0f) {
+			if (Mathf.Abs(inputAxis.x) > 0.0f && Mathf.Abs(inputAxis.y) > 0.0f) {
 				inputAxis *= diagonalMultiplier;
 			}
 
@@ -86,7 +87,7 @@ public class CharacterPhysics : MonoBehaviour {
 			// Compute counteracting force
 			// When realitiveVelocity is greater than max speed, always have counteracting force on no matter about the input
 			// Also multiply the realitiveVelocity.normalized to the final outputs to force the body to slow down faster
-			Vector3 counteractingForce = new Vector3((((Mathf.Abs(realitiveVelocity.x) >= maxSpeed.x)? 1.0f : inputAxisInverseMultiplier.x) * counteractForce.x) * realitiveVelocityNorm.x, 0.0f, (((Mathf.Abs(realitiveVelocity.x) >= maxSpeed.x)? 1.0f : inputAxisInverseMultiplier.y) * counteractForce.y) * realitiveVelocityNorm.z);
+			Vector3 counteractingForce = new Vector3((((Mathf.Abs(realitiveVelocity.x) >= maxSpeed.x)? 1.0f : inputAxisInverseMultiplier.x) * counteractForce.x) * realitiveVelocityNorm.x, 0.0f, (((Mathf.Abs(realitiveVelocity.z) >= maxSpeed.y)? 1.0f : inputAxisInverseMultiplier.y) * counteractForce.y) * realitiveVelocityNorm.z);
 
 			// Collision Magnitude >= max, then output = 1.  Collision Magnitude <= min, then output = 0
 			float collisionMultiplier = Mathf.Abs(((collisionMagnitude - minColMagnitude) / maxColMagnitude) - 1.0f);
@@ -113,9 +114,15 @@ public class CharacterPhysics : MonoBehaviour {
 			// Compute force dir simply like a normal character controller
 			Vector3 forceDir = new Vector3(inputAxis.x * movementForce.x, 0.0f, inputAxis.y * movementForce.y);
 
-			// Apply collision multiplier to forceDir when collided
-			if (colliding) {
+			Vector3 realitiveColNormal = transform.InverseTransformDirection(collisionNormal);
+
+			// Apply collision multiplier to forceDir when collided only when its not collision from ground
+			if (colliding && Vector3Round(realitiveColNormal) != Vector3.up) {
 				forceDir *= collisionMultiplier;
+			}
+			// Double forceDir when colliding to ground to help prevent after-jump slow startup
+			if (colliding && Vector3Round(realitiveColNormal) == Vector3.up) {
+				forceDir *= 2.0f;
 			}
 
 			// Attempt to cap the speed of the body at max speed by zeroing out the forceDir
@@ -161,6 +168,7 @@ public class CharacterPhysics : MonoBehaviour {
 		GUILayout.BeginArea(new Rect(10, 10, 400, Screen.height - 20.0f));
 
 		GUILayout.Label(grounded.ToString());
+		GUILayout.Label(collisionNormal.ToString());
 
 		GUILayout.EndArea();
 	}
@@ -169,18 +177,28 @@ public class CharacterPhysics : MonoBehaviour {
 	void OnCollisionEnter (Collision collision) {
 		collisionMagnitude = collision.relativeVelocity.magnitude;
 
-		/*
+		// Add all collision normals and normalize them
 		Vector3 allCollisions = Vector3.zero;
 		foreach (ContactPoint contact in collision.contacts) {
 			allCollisions += contact.normal;
 		}
 
 		collisionNormal = allCollisions.normalized;
-		*/
 
 		if (collisionMagnitude >= minColMagnitude) {
 			colliding = true;
 			collisionStartTime = Time.time;
 		}
+	}
+
+	// Round vector3 to nearest 10th
+	Vector3 Vector3Round (Vector3 a) {
+		Vector3 finalVector;
+
+		finalVector.x = Mathf.Round(a.x * 10.0f) / 10.0f;
+		finalVector.y = Mathf.Round(a.y * 10.0f) / 10.0f;
+		finalVector.z = Mathf.Round(a.z * 10.0f) / 10.0f;
+
+		return finalVector;
 	}
 }
