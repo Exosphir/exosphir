@@ -129,7 +129,7 @@ namespace Edit {
             if (_currentItem == null) return;
 
             if (_currentItem.Rotatable) {
-                if (Input.GetKey(_input.rotateKey)) {
+                if (Input.GetKey(_input.rotateKey) || Input.GetKey(_input.turnOffSnap)) {
                     _zoom = false;
                     var angle = _input.scroll * FineRotationStep;
                     if (Mathf.Abs(angle) > 0.1) {

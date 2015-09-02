@@ -120,6 +120,11 @@ namespace Edit {
                 .Select(kvp => new KeyValuePair<Vector3, PlacedItem>(kvp.Key, kvp.Value[0])); //finally return the offset and associated object
         }
 
+        /// <summary>
+        /// Verifies that an item is marked optimizable, is evenly rotated and not scaled.
+        /// </summary>
+        /// <param name="item">The item to check</param>
+        /// <returns>True if the item is optimizable</returns>
         private bool IsOptimizable(PlacedItem item) {
             //uses tolerances because floats!
             var trans = item.transform;
@@ -130,12 +135,18 @@ namespace Edit {
                 && IsOrthogonalRotation(trans.rotation);
         }
 
-        private static bool IsOrthogonalRotation(Quaternion q) {
-            var angles = q.eulerAngles;
+        /// <summary>
+        /// Returns true if the given quaternion represents a orthogonal direction within an error margin
+        /// </summary>
+        /// <param name="rotation">The rotation to check</param>
+        /// <returns>True if all axes' rotations are multiples of 90 degrees</returns>
+        private static bool IsOrthogonalRotation(Quaternion rotation) {
+            var angles = rotation.eulerAngles;
             return AlmostMultiple(angles.x, 90)
                 && AlmostMultiple(angles.y, 90)
                 && AlmostMultiple(angles.z, 90);
         }
+        
 
         private static bool AlmostMultiple(float a, float b, float precision = 0.0001f) {
             var mod = a % b;
