@@ -248,8 +248,10 @@ namespace Edit.Editor {
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Model"), new GUIContent("Model"));
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Groups"),
                                           new GUIContent("Groups", "Internal groupings to determine various many-to-many relations"), true);
-            EditorGUILayout.PropertyField(currentItemSerial.FindProperty("OptimizationGroups"),
+            if (_currentItem.Optimizable) {
+                EditorGUILayout.PropertyField(currentItemSerial.FindProperty("OptimizationGroups"),
                                           new GUIContent("Optimize With", "Which groups can this object optimize with. Optimizable objects always optimize with themselves"), true);
+            }
             EditorGUI.indentLevel--;
             GUILayout.EndVertical();
 
