@@ -11,22 +11,22 @@ namespace Edit {
         public float InitialSize = 20f;
         [HideInInspector]
         public CatalogItemPool Pool;
+        [HideInInspector]
+        public Grid Grid;
 
         private PointOctree<PlacedItem> _octree;
-        private Grid _grid;
         private Catalog _catalog;
+        private BlockOptimizer _optimizer;
 
         void Start() {
             _catalog = Catalog.GetInstance();
+            _optimizer = BlockOptimizer.GetInstance();
             _octree = new PointOctree<PlacedItem>(InitialSize, Vector3.zero, 1);
-            _grid = GetComponent<Grid>();
+            Grid = GetComponent<Grid>();
             
             var obj = new GameObject("Pool");
             obj.transform.parent = transform;
-            Pool = obj.GetComponent<CatalogItemPool>();
-            if (Pool == null) {
-                Pool = obj.AddComponent<CatalogItemPool>();
-            }
+            Pool = obj.AddComponent<CatalogItemPool>();
             Pool.PooledHolder = obj.transform;
             Pool.ModelGenerator = item => item.Model;
             SeedObjectPool();
@@ -47,8 +47,9 @@ namespace Edit {
         /// <param name="position">Position of the new item</param>
         /// <param name="rotation">Rotation of the item</param>
         /// <param name="scale">Uniform scaling factor of the item</param>
+        /// <param name="snap"></param>
         /// <returns>A PlacedItem denoting the just-placed item</returns>
-        public PlacedItem PlaceItemAt(CatalogItem item, Vector3 position, Quaternion rotation, float scale) {
+        public PlacedItem PlaceItemAt(CatalogItem item, Vector3 position, Quaternion rotation, float scale, bool unique) {
             var obj = Pool.Get(item, item.Category.PoolFillWhenDry);
             obj.transform.SetParent(Container);
             obj.transform.position = position;
@@ -56,8 +57,10 @@ namespace Edit {
             obj.transform.localScale = Vector3.one * scale;
             
             var placed = obj.AddComponent<PlacedItem>();
+            placed.UniqueInSlot = unique;
             placed.CatalogEntry = item;
             _octree.Add(placed, position);
+            _optimizer.Optimize(placed);
             return placed;
         }
 
@@ -68,6 +71,7 @@ namespace Edit {
         public void RegisterExistingItem(PlacedItem placed) {
             placed.transform.SetParent(Container, true);
             _octree.Add(placed, placed.transform.position);
+            _optimizer.Optimize(placed);
         }
 
         /// <summary>
@@ -78,12 +82,12 @@ namespace Edit {
         /// <returns>All items inside that cell</returns>
         public IEnumerable<PlacedItem> GetObjectsInCell(Vector3 pos) {
             // get objects in nearby sphere covering whole cell
-            var octNear = _octree.GetNearby(pos, _grid.CellSize / SquareRoot2);
+            var octNear = _octree.GetNearby(pos, Grid.CellSize / SquareRoot2);
 
             var cellmates = new List<PlacedItem>(octNear.Count);
             foreach (var near in octNear) {
                 //filter objects in sphere to cell
-                if (_grid.SharingCell(pos, near.transform.position)) {
+                if (Grid.SharingCell(pos, near.transform.position)) {
                     cellmates.Add(near);
                 }
             }
@@ -101,6 +105,7 @@ namespace Edit {
             var entry = item.CatalogEntry;
             Destroy(item);
             Pool.AddTo(entry, obj);
+            _optimizer.OptimizeNeighbours(obj.transform.position);
         }
 
         void OnDrawGizmosSelected() {

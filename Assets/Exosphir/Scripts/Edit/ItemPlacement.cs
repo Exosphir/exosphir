@@ -33,6 +33,7 @@ namespace Edit {
 
         private bool _zoom, _snap;
         private bool _hasRotated;
+        private bool _hasStepped;
         private CatalogItem _currentItem;
         private Vector2 _oldMouse;
         private ConfigurableInput _input;
@@ -103,8 +104,7 @@ namespace Edit {
                 }
             }
             if (canPlace) {
-                var placed = _world.PlaceItemAt(CatalogInterface.CurrentItem, MouseInGrid, Quaternion.Euler(ItemRotationEuler), Scale);
-                placed.UniqueInSlot = _snap;
+                _world.PlaceItemAt(CatalogInterface.CurrentItem, MouseInGrid, Quaternion.Euler(ItemRotationEuler), Scale, _snap);
             }
         }
 
@@ -143,7 +143,11 @@ namespace Edit {
                     if (_hasRotated) {
                         _hasRotated = false;
                     } else {
-                        ItemRotationEuler.y += 90;
+                        if (Input.GetKey(_input.secondaryRotate)) {
+                            ItemRotationEuler.x += 90;
+                        } else {
+                            ItemRotationEuler.y += 90;
+                        }
                     }
                 }
             }
@@ -159,17 +163,25 @@ namespace Edit {
 
         private void UpdateFloors() {
             //sum key states in opposite directions
-            var floorStepDirection = (Input.GetKeyDown(_input.upFloor) ? 1f : 0f) -
-                                     (Input.GetKeyDown(_input.downFloor) ? 1f : 0f);
+            var floorStepDirection = (Input.GetKeyUp(_input.upFloor) ? 1f : 0f) -
+                                     (Input.GetKeyUp(_input.downFloor) ? 1f : 0f);
             var fast = Input.GetKey(_input.fastMovementKey);
             if (fast) floorStepDirection *= FastFloorMultiplier;
-            if (Mathf.Abs(floorStepDirection) > 0.01) {
-                Floor = Mathf.Round(Floor + floorStepDirection);
+            if (_hasStepped) {
+                _hasStepped = false;
+            } else {
+                if (Mathf.Abs(floorStepDirection) > 0.01) {
+                    Floor = Mathf.Round(Floor + floorStepDirection);
+                }
             }
 
-            if (Input.GetKey(_input.fineFloor)) {
-                _zoom = false;
-                Floor += FineFloorMultiplier * _input.scroll;
+            if (Input.GetKey(_input.fineFloor) || Input.GetKey(_input.upFloor) || Input.GetKey(_input.downFloor)) {
+                var scroll = _input.scroll;
+                if (Mathf.Abs(scroll) > 0.01) {
+                    _zoom = false;
+                    _hasStepped = true;
+                    Floor += FineFloorMultiplier * scroll;
+                }
             }
 
             CurrentFloorHeight = Mathf.Lerp(CurrentFloorHeight, Floor, FloorSwitchDamping * Time.deltaTime);

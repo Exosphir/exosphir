@@ -20,6 +20,7 @@ namespace Edit.Backend {
         public PreviewImage PreviewImage;
         public bool Rotatable = true;
         public bool Scalable = true;
+        public bool Optimizable = false;
         public int Id = -1;
         
         [SerializeField]
