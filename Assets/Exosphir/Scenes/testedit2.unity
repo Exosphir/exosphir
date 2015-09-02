@@ -100,9 +100,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 168704, guid: f73a696b5c98141df9b7d5a0d4ecd302, type: 2}
   PreviewImage: {fileID: 1175761829}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
   Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 4
   _category: {fileID: 355741785}
 --- !u!114 &355741785
@@ -139,9 +143,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 198258, guid: 59aa1acb684064524b9e59617df456f9, type: 2}
   PreviewImage: {fileID: 1438527713}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
   Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 0
   _category: {fileID: 355741785}
 --- !u!1 &467805940
@@ -333,9 +341,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 138032, guid: dc0fa2e06446b44a790c86ed1281c45f, type: 2}
   PreviewImage: {fileID: 895604179}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
   Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 5
   _category: {fileID: 355741785}
 --- !u!1001 &725807787
@@ -419,7 +431,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -647
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.x
@@ -475,9 +487,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 108244, guid: 698a6379198734d75b1750e36564ec6f, type: 2}
   PreviewImage: {fileID: 1500603352}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
   Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 2
   _category: {fileID: 355741785}
 --- !u!114 &1175761829
@@ -562,9 +578,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 100770, guid: ad3aa88ac6a344a819f306f135671bed, type: 2}
   PreviewImage: {fileID: 1986867371}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
   Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 3
   _category: {fileID: 355741785}
 --- !u!1 &1315650204
@@ -783,9 +803,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 198258, guid: d69105a87c5fd46e38d1235ffb88660e, type: 2}
   PreviewImage: {fileID: 1178811662}
+  Groups:
+  - transparent
   Rotatable: 1
   Scalable: 1
   Optimizable: 1
+  OptimizationGroups:
+  - transparent
+  - opaque
   Id: 1
   _category: {fileID: 355741785}
 --- !u!1 &1627252428

@@ -59,7 +59,8 @@ namespace Edit {
             var faceNormals = new List<Vector3>(6);
             foreach (var offset in NeighbourOffsets) {
                 var optimizableNeighbours = _world.GetObjectsInCell(cell + offset).Where(IsOptimizable).ToList();
-                if (optimizableNeighbours.Count > 0) {
+                var entries = optimizableNeighbours.Select(n => n.CatalogEntry);
+                if (entries.Any(n => n.Id == item.CatalogEntry.Id || item.CatalogEntry.OptimizableWith(n))) {
                     if (spread) {
                         foreach (var neighbour in optimizableNeighbours) {
                             OptimizeInternal(neighbour, false); //update neighbouring objects

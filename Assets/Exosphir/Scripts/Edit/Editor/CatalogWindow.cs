@@ -243,8 +243,13 @@ namespace Edit.Editor {
             EditorGUI.indentLevel++;
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Scalable"), new GUIContent("Scalable"));
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Rotatable"), new GUIContent("Rotatable"));
-            EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Optimizable"), new GUIContent("Optimizable", "If enabled, model mesh will be substituted by optimized version during map load."));
+            EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Optimizable"),
+                                          new GUIContent("Optimizable", "If enabled, model mesh will be substituted by optimized version during map load."));
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Model"), new GUIContent("Model"));
+            EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Groups"),
+                                          new GUIContent("Groups", "Internal groupings to determine various many-to-many relations"), true);
+            EditorGUILayout.PropertyField(currentItemSerial.FindProperty("OptimizationGroups"),
+                                          new GUIContent("Optimize With", "Which groups can this object optimize with. Optimizable objects always optimize with themselves"), true);
             EditorGUI.indentLevel--;
             GUILayout.EndVertical();
 
