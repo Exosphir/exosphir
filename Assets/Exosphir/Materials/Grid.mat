@@ -178,4 +178,4 @@ Material:
       data:
         first:
           name: _Offset
-        second: {r: .5, g: 0, b: .5, a: 1}
+        second: {r: 0, g: 0, b: 0, a: 1}

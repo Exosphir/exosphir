@@ -54,7 +54,7 @@ namespace Edit {
             if (!IsOptimizable(item)) return;
 
             var go = item.gameObject;
-            var cell = _world.Grid.Snap(go.transform.position, 0.5f);
+            var cell = _world.Grid.Snap(go.transform.position);
             //collect normals for faces without optimizable neighbours
             var faceNormals = new List<Vector3>(6);
             foreach (var offset in NeighbourOffsets) {
@@ -76,7 +76,7 @@ namespace Edit {
                 var baseVertIndex = i * VertsPerFace;
                 var baseFaceIndex = i * VertsForQuad;
 
-                var normal = faceNormals[i];
+                var normal = go.transform.InverseTransformDirection(faceNormals[i]); //account for rotation
                 var position = normal / 2; //in a 1x1x1 cube, a faces position is 0.5 away from center
 
                 var planar = normal.x + normal.y + normal.z > 0 //remember theres always only 1 nonzero axis, this is basically a or
@@ -126,7 +126,19 @@ namespace Edit {
             return item.CatalogEntry.Optimizable
                 && item.UniqueInSlot
                 && Math.Abs((trans.localScale - Vector3.one).sqrMagnitude) < 0.0001 //scale within a very small variance from the unit scale
-                && Quaternion.Angle(trans.rotation, Quaternion.identity) < 0.0001; //rotation within tolerance
+                && IsOrthogonalRotation(trans.rotation);
+        }
+
+        private static bool IsOrthogonalRotation(Quaternion q) {
+            var angles = q.eulerAngles;
+            return AlmostMultiple(angles.x, 90)
+                && AlmostMultiple(angles.y, 90)
+                && AlmostMultiple(angles.z, 90);
+        }
+
+        private static bool AlmostMultiple(float a, float b, float precision = 0.0001f) {
+            var mod = a % b;
+            return mod < precision || b - mod < precision;
         }
     }
 }

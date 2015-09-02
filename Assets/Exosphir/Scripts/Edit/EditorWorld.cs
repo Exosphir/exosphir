@@ -101,11 +101,12 @@ namespace Edit {
         /// <param name="item">The item to remove</param>
         public void Remove(PlacedItem item) {
             _octree.Remove(item);
-            var obj = item.gameObject;
+            var go = item.gameObject;
+            var position = go.transform.position;
             var entry = item.CatalogEntry;
             Destroy(item);
-            Pool.AddTo(entry, obj);
-            _optimizer.OptimizeNeighbours(obj.transform.position);
+            Pool.AddTo(entry, go);
+            _optimizer.OptimizeNeighbours(position);
         }
 
         void OnDrawGizmosSelected() {

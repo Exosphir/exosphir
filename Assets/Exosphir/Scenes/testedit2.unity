@@ -423,11 +423,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -970,7 +970,6 @@ MonoBehaviour:
   CatalogInterface: {fileID: 725947100}
   Cursor: {fileID: 1209055802}
   Grid: {fileID: 1627252433}
-  GridVerticalOffset: .5
   CursorDamping: 20
   FloorSwitchDamping: 10
   FastFloorMultiplier: 10

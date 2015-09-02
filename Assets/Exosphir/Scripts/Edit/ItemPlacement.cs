@@ -9,7 +9,6 @@ namespace Edit {
         public CatalogInterface CatalogInterface;
         public ItemCursor Cursor;
         public Grid Grid;
-        public float GridVerticalOffset;
         public float CursorDamping = 20f;
         public float FloorSwitchDamping = 10f;
         public float FastFloorMultiplier = 10;
@@ -112,7 +111,9 @@ namespace Edit {
             //update mouse in grid only when it actually is on the grid.
             var mousePosWorld = ScreenPointToGrid(Input.mousePosition);
             if (mousePosWorld.HasValue) {
-                MouseInGrid = _snap ? Grid.Snap(mousePosWorld.Value, GridVerticalOffset) : mousePosWorld.Value;
+                MouseInGrid = _snap 
+                    ? Grid.Snap(mousePosWorld.Value + Vector3.up * (Grid.CellSize / 2))
+                    : mousePosWorld.Value;
             }
         }
 
