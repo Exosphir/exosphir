@@ -9,6 +9,7 @@ namespace Edit {
         public CatalogInterface CatalogInterface;
         public ItemCursor Cursor;
         public Grid Grid;
+        public float GridVerticalOffset = 0.005f;
         public float CursorDamping = 20f;
         public float FloorSwitchDamping = 10f;
         public float FastFloorMultiplier = 10;
@@ -186,7 +187,7 @@ namespace Edit {
             }
 
             CurrentFloorHeight = Mathf.Lerp(CurrentFloorHeight, Floor, FloorSwitchDamping * Time.deltaTime);
-            Grid.transform.position = Vector3.up * Floor;
+            Grid.transform.position = Vector3.up * (Floor + GridVerticalOffset);
         }
     }
 }

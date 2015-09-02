@@ -964,9 +964,9 @@ MonoBehaviour:
   RotationSpeed: 1
   RotationMaxDelta: 1
   MaxPitch: 90
-  MinPitch: -94.2699966
-  ZoomSpeed: 10
-  MinDistance: .734266281
+  MinPitch: -90
+  ZoomSpeed: 20
+  MinDistance: 1
   MaxDistance: 20
 --- !u!4 &1852390986
 Transform:
@@ -995,6 +995,7 @@ MonoBehaviour:
   CatalogInterface: {fileID: 725947100}
   Cursor: {fileID: 1209055802}
   Grid: {fileID: 1627252433}
+  GridVerticalOffset: .00499999989
   CursorDamping: 20
   FloorSwitchDamping: 10
   FastFloorMultiplier: 10
