@@ -156,7 +156,7 @@ Transform:
   m_GameObject: {fileID: 129335440}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1.25, z: 0}
-  m_LocalScale: {x: 15, y: 1, z: 15}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -267,11 +267,11 @@ MonoBehaviour:
   movementForce: {x: 25, y: 25}
   counteractForce: {x: -20, y: -20}
   maxSpeed: {x: 5, y: 5}
-  strafeMultiplier: .699999988
-  diagonalMultiplier: .5
+  strafeMultiplier: .550000012
+  diagonalMultiplier: .49000001
   inAirMovementForce: {x: 10, y: 10}
   inAirMaxStrafeSpeed: 3
-  inAirminimumMaxReverseSpeed: 3
+  inAirMinimumMaxReverseSpeed: 3
   jumpSpeed: 7
   minColMagnitude: 7
   maxColMagnitude: 10
