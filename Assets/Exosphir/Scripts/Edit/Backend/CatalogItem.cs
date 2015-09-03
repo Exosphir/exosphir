@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Edit.Backend {
@@ -18,8 +19,11 @@ namespace Edit.Backend {
         
         public GameObject Model;
         public PreviewImage PreviewImage;
+        public string[] Groups;
         public bool Rotatable = true;
         public bool Scalable = true;
+        public bool Optimizable = false;
+        public string[] OptimizationGroups;
         public int Id = -1;
         
         [SerializeField]
@@ -50,6 +54,10 @@ namespace Edit.Backend {
             var cache = PreviewCache.GetForResolution(DefaultPreviewResolution.Width, DefaultPreviewResolution.Height);
             var preview = cache.GetImageFor(this);
             return preview ?? Catalog.GetInstance().NullTexture;
+        }
+
+        public bool OptimizableWith(CatalogItem other) {
+            return OptimizationGroups.Intersect(other.Groups).Any();
         }
 
         void OnEnable() {

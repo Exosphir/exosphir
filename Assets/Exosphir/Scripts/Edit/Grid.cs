@@ -23,19 +23,20 @@ namespace Edit {
             return new Rect(center.x - sizeX / 2, center.z - sizeZ / 2, sizeX, sizeZ);
         }
 
-        public Vector3 Snap(Vector3 position, float gridVerticalOffset = 0) {
+        public Vector3 Snap(Vector3 position) {
             var rect = GetHorizontalPlaneRect();
-            var snapX = Mathf.Round(position.x / CellSize) * CellSize;
-            var snapZ = Mathf.Round(position.z / CellSize) * CellSize;
+            var snapX = Mathf.Floor(position.x / CellSize) * CellSize;
+            var snapY = Mathf.Floor(position.y / CellSize) * CellSize;
+            var snapZ = Mathf.Floor(position.z / CellSize) * CellSize;
             return new Vector3 {
-                x = Mathf.Clamp(snapX, rect.xMin, rect.xMax),
-                y = transform.position.y + gridVerticalOffset,
-                z = Mathf.Clamp(snapZ, rect.yMin, rect.yMax)
+                x = Mathf.Clamp(snapX, rect.xMin, rect.xMax) + CellSize / 2f,
+                y = snapY + CellSize / 2f,
+                z = Mathf.Clamp(snapZ, rect.yMin, rect.yMax) + CellSize / 2f
             };
         }
 
         public bool SharingCell(Vector3 a, Vector3 b) {
-            var halfSize = CellSize;
+            var halfSize = CellSize / 2;
             var delta = Snap(b) - Snap(a);
             return delta.x < halfSize
                    && delta.y < halfSize

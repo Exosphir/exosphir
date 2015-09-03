@@ -21,7 +21,7 @@ namespace Edit {
     /// Manages a list of edit mode objects.
     /// </summary>
     [Serializable]
-    public sealed class Catalog : SingletonBehaviour<Catalog>, IEnumerable<CatalogItem>, ISerializationCallbackReceiver {
+    public sealed class Catalog : SingletonBehaviour<Catalog>, IEnumerable<CatalogItem> {
         private static Catalog _instance;
 
         public CatalogItemButton ButtonTemplate;
@@ -155,14 +155,6 @@ namespace Edit {
 
         IEnumerator IEnumerable.GetEnumerator() {
             return GetEnumerator();
-        }
-
-        public void OnBeforeSerialize() {
-            
-        }
-
-        public void OnAfterDeserialize() {
-            
         }
     }
 }

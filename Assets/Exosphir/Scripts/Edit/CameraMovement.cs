@@ -53,9 +53,9 @@ namespace Edit {
         }
 
         private void RotateCamera(Vector2 mouse) {
-            _anglePitchYaw += new Vector2 {
-                x = -ClampAngle(mouse.y, MinPitch, MaxPitch),
-                y = mouse.x
+            _anglePitchYaw = new Vector2 {
+                x = ClampAngle(_anglePitchYaw.x - mouse.y, MinPitch, MaxPitch),
+                y = _anglePitchYaw.y + mouse.x
             };
             transform.rotation = Quaternion.Euler(_anglePitchYaw.x, _anglePitchYaw.y, 0f);
         }
@@ -63,11 +63,11 @@ namespace Edit {
         private void ZoomCamera(float scroll) {
             var newLocalPosition = Camera.transform.localPosition;
 
-            var distance = newLocalPosition.z;
+            var distance = Mathf.Abs(newLocalPosition.z);
             var delta = scroll * ZoomSpeed * Time.deltaTime;
-            var finalDistance = distance + delta;
+            var finalDistance = Mathf.Clamp(distance - delta, MinDistance, MaxDistance);
 
-            newLocalPosition.z = -Mathf.Abs(finalDistance);
+            newLocalPosition.z = -finalDistance;
             Camera.transform.localPosition = newLocalPosition;
         }
 

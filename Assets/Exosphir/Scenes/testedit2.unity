@@ -134,8 +134,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 168704, guid: f73a696b5c98141df9b7d5a0d4ecd302, type: 2}
   PreviewImage: {fileID: 1175761829}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
+  Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 4
   _category: {fileID: 355741785}
 --- !u!114 &355741785
@@ -176,8 +181,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 198258, guid: 59aa1acb684064524b9e59617df456f9, type: 2}
   PreviewImage: {fileID: 1438527713}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
+  Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 0
   _category: {fileID: 355741785}
 --- !u!114 &405570457
@@ -383,8 +393,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 138032, guid: dc0fa2e06446b44a790c86ed1281c45f, type: 2}
   PreviewImage: {fileID: 895604179}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
+  Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 5
   _category: {fileID: 355741785}
 --- !u!1001 &725807787
@@ -468,15 +483,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -669
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -556,8 +571,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 108244, guid: 698a6379198734d75b1750e36564ec6f, type: 2}
   PreviewImage: {fileID: 1500603352}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
+  Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 2
   _category: {fileID: 355741785}
 --- !u!114 &1070023062
@@ -672,8 +692,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 100770, guid: ad3aa88ac6a344a819f306f135671bed, type: 2}
   PreviewImage: {fileID: 1986867371}
+  Groups:
+  - opaque
   Rotatable: 1
   Scalable: 1
+  Optimizable: 1
+  OptimizationGroups:
+  - opaque
   Id: 3
   _category: {fileID: 355741785}
 --- !u!1 &1315650204
@@ -761,6 +786,7 @@ GameObject:
   - 114: {fileID: 1425560095}
   - 114: {fileID: 1425560096}
   - 114: {fileID: 1425560094}
+  - 114: {fileID: 1425560097}
   m_Layer: 0
   m_Name: Origin
   m_TagString: Untagged
@@ -841,6 +867,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9a1c660192623645a080d3ca9b124a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1425560097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1425560092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf0a36d4437cc494da5f94ad562f6602, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1438527713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -884,8 +921,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 198258, guid: d69105a87c5fd46e38d1235ffb88660e, type: 2}
   PreviewImage: {fileID: 1178811662}
+  Groups:
+  - transparent
   Rotatable: 1
   Scalable: 1
+  Optimizable: 1
+  OptimizationGroups:
+  - transparent
+  - opaque
   Id: 1
   _category: {fileID: 355741785}
 --- !u!1 &1627252428
@@ -991,6 +1034,7 @@ MonoBehaviour:
   Container: {fileID: 1425560093}
   InitialSize: 20
   Pool: {fileID: 0}
+  Grid: {fileID: 0}
 --- !u!114 &1627252435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1038,9 +1082,9 @@ MonoBehaviour:
   RotationSpeed: 1
   RotationMaxDelta: 1
   MaxPitch: 90
-  MinPitch: -94.2699966
-  ZoomSpeed: 10
-  MinDistance: .734266281
+  MinPitch: -90
+  ZoomSpeed: 20
+  MinDistance: 1
   MaxDistance: 20
 --- !u!4 &1852390986
 Transform:
@@ -1069,7 +1113,7 @@ MonoBehaviour:
   CatalogInterface: {fileID: 725947100}
   Cursor: {fileID: 1209055802}
   Grid: {fileID: 1627252433}
-  GridVerticalOffset: .5
+  GridVerticalOffset: .00499999989
   CursorDamping: 20
   FloorSwitchDamping: 10
   FastFloorMultiplier: 10
