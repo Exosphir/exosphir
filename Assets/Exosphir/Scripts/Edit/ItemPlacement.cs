@@ -103,7 +103,7 @@ namespace Edit {
                     canPlace = true;
                 }
             }
-            if (canPlace) {
+            if (canPlace && !Input.GetButton(_input.orbitKey)) {
                 _world.PlaceItemAt(CatalogInterface.CurrentItem, MouseInGrid, Quaternion.Euler(ItemRotationEuler), Scale, _snap);
             }
         }
