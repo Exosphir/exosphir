@@ -99,6 +99,50 @@ namespace Edit.Backend {
             return image;
         }
 
+		public GameObject[] SpawnRenderPreviewRig () {
+			GameObject[] rigStuff = new GameObject[3];
+
+			GameObject rigParent = new GameObject("PreviewImageRig");
+
+			var cameraObject = new GameObject("__catalog_preview_camera");
+			var pivot = new GameObject("__catalog_preview_pivot");
+			cameraObject.hideFlags = HideFlags.DontSave;
+			pivot.hideFlags = HideFlags.DontSave;
+
+			pivot.transform.parent = rigParent.transform;
+			cameraObject.transform.parent = pivot.transform;
+			var camera = cameraObject.AddComponent<Camera>();
+			camera.clearFlags = CameraClearFlags.SolidColor;
+			camera.backgroundColor = MatteColor;
+			
+			//must record active state to be able to instantiate disabled object
+			//otherwise undesired scripts might run
+			var wasActive = _subject.Model.activeSelf;
+			_subject.Model.SetActive(false);
+			var objectToRender = (GameObject) Object.Instantiate(_subject.Model, Vector3.zero, Quaternion.identity);
+			objectToRender.name = "__catalog_preview_subject";
+			_subject.Model.SetActive(wasActive);
+			DisableScriptsInHierarchy(objectToRender);
+			objectToRender.SetActive(true);
+			
+			//position camera and pivot
+			objectToRender.transform.parent = rigParent.transform;
+			objectToRender.transform.position = Vector3.zero;
+			pivot.transform.position = Vector3.zero;
+			camera.transform.localPosition = Vector3.forward * DistanceToPivot;
+			camera.transform.LookAt(objectToRender.transform);
+			pivot.transform.position += PivotPosition;
+			pivot.transform.rotation = PivotRotation;
+
+			UnityEditor.Selection.activeGameObject = camera.gameObject;
+
+			rigStuff[0] = cameraObject;
+			rigStuff[1] = pivot;
+			rigStuff[2] = objectToRender;
+
+			return rigStuff;
+		}
+
         public static PreviewImage Create(CatalogItem subject) {
             var preview = CreateInstance<PreviewImage>();
             preview._subject = subject;

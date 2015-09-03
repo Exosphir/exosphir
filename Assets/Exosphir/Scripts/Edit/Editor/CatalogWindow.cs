@@ -28,6 +28,8 @@ namespace Edit.Editor {
         private string[] _categoryNames;
         private SerializedObject _serializedCatalog;
 
+		private GameObject[] rigStuff;
+
         public void OnFocus() {
             titleContent = new GUIContent("Catalog Editor");
             var newCatalogComponent = Catalog.GetInstance();
@@ -182,6 +184,7 @@ namespace Edit.Editor {
             if (GUILayout.Button("Render all previews")) {
                 foreach (var item in _catalog) {
                     PreviewAssetGenerator.GeneratePreviewToFile(item);
+					AssetDatabase.Refresh();
                 }
             }
             GUILayout.EndHorizontal();
@@ -267,8 +270,20 @@ namespace Edit.Editor {
             EditorGUI.indentLevel--;
             GUILayout.EndVertical();
 
+			if (rigStuff == null) {
+				if (GUILayout.Button("Edit Settings in Scene")) {
+					rigStuff =_currentItem.PreviewImage.SpawnRenderPreviewRig();
+				}
+			} else {
+				if (GUILayout.Button("Destroy Rig")) {
+					DestroyImmediate(rigStuff[0].transform.parent.gameObject);
+					rigStuff = null;
+				}
+			}
+
             if (GUILayout.Button("Render Preview Image")) {
                 PreviewAssetGenerator.GeneratePreviewToFile(_currentItem);
+				AssetDatabase.Refresh();
             }
             previewSerial.ApplyModifiedProperties();
             currentItemSerial.ApplyModifiedProperties();

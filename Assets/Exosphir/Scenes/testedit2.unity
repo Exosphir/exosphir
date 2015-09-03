@@ -87,6 +87,21 @@ NavMeshSettings:
     cellSize: .166666672
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &174523166
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80040e1a5a15a3645b0179b058bf28f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _subject: {fileID: 1256425240}
+  DistanceToPivot: 1.39999998
+  PivotPosition: {x: 0, y: .100000001, z: .0500000007}
+  PivotRotation: {x: .218285576, y: -.518991649, z: -.139063463, w: -.814653575}
 --- !u!114 &248951403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,8 +115,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 138032, guid: 7de7a11426deaf74f9f91b92babb7661, type: 2}
   PreviewImage: {fileID: 809311704}
+  Groups: []
   Rotatable: 1
   Scalable: 1
+  Optimizable: 0
+  OptimizationGroups: []
   Id: 9
   _category: {fileID: 355741785}
 --- !u!114 &262055681
@@ -117,8 +135,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 100000, guid: 141e3b6221c30444dbed9dc6af012753, type: 3}
   PreviewImage: {fileID: 1126990355}
+  Groups: []
   Rotatable: 1
   Scalable: 1
+  Optimizable: 0
+  OptimizationGroups: []
   Id: 7
   _category: {fileID: 355741785}
 --- !u!114 &334228001
@@ -165,6 +186,7 @@ MonoBehaviour:
   - {fileID: 262055681}
   - {fileID: 830526624}
   - {fileID: 248951403}
+  - {fileID: 1256425240}
   Name: Misc
   PooledPerItem: 10
   PoolFillWhenDry: 5
@@ -483,15 +505,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_SizeDelta.y
-      value: -669
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchoredPosition.y
@@ -520,7 +542,7 @@ MonoBehaviour:
   _subject: {fileID: 248951403}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!114 &830526624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -532,10 +554,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b568de031bda7a04790e36bab0600e0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Model: {fileID: 100000, guid: b9fb3c6a6a313d0419e60924a15a04e4, type: 3}
+  Model: {fileID: 161626, guid: 30fe554bb5b4fce40a6da8919a959504, type: 2}
   PreviewImage: {fileID: 1070023062}
+  Groups: []
   Rotatable: 1
   Scalable: 1
+  Optimizable: 0
+  OptimizationGroups: []
   Id: 8
   _category: {fileID: 355741785}
 --- !u!224 &853611871 stripped
@@ -557,7 +582,7 @@ MonoBehaviour:
   _subject: {fileID: 645250663}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!114 &974874277
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -594,7 +619,7 @@ MonoBehaviour:
   _subject: {fileID: 830526624}
   DistanceToPivot: 2
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!114 &1126990355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,7 +634,7 @@ MonoBehaviour:
   _subject: {fileID: 262055681}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!114 &1175761829
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,7 +649,7 @@ MonoBehaviour:
   _subject: {fileID: 334228001}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!114 &1178811662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,7 +664,7 @@ MonoBehaviour:
   _subject: {fileID: 1505011451}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!1 &1209055801
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,6 +704,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
+--- !u!114 &1256425240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b568de031bda7a04790e36bab0600e0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Model: {fileID: 133392, guid: d784baf4e5683461f87818e2e70b049a, type: 2}
+  PreviewImage: {fileID: 174523166}
+  Groups: []
+  Rotatable: 1
+  Scalable: 1
+  Optimizable: 0
+  OptimizationGroups: []
+  Id: 10
+  _category: {fileID: 355741785}
 --- !u!114 &1301920646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -832,6 +877,7 @@ MonoBehaviour:
   - {fileID: 262055681}
   - {fileID: 830526624}
   - {fileID: 248951403}
+  - {fileID: 1256425240}
   Categories:
   - {fileID: 355741785}
 --- !u!114 &1425560095
@@ -892,7 +938,7 @@ MonoBehaviour:
   _subject: {fileID: 392659155}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!114 &1500603352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -907,7 +953,7 @@ MonoBehaviour:
   _subject: {fileID: 974874277}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!114 &1505011451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1142,7 +1188,7 @@ MonoBehaviour:
   _subject: {fileID: 1301920646}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: .353553236, y: -.353553474, z: -.146446586, w: -.853553474}
+  PivotRotation: {x: .353553236, y: -.353553444, z: -.146446571, w: -.853553474}
 --- !u!1 &2020807472
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,7 +1262,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Model: {fileID: 102670, guid: 12eb367ef7b20fc42900af06b0ac4592, type: 2}
   PreviewImage: {fileID: 405570457}
+  Groups: []
   Rotatable: 1
   Scalable: 1
+  Optimizable: 0
+  OptimizationGroups: []
   Id: 6
   _category: {fileID: 355741785}

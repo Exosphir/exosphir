@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Edit.Backend;
 using UnityEngine;
+using UnityEditor;
 using Resolution = Edit.Backend.Resolution;
 
 namespace Edit.Editor {
