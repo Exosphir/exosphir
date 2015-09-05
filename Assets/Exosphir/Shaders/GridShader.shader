@@ -2,6 +2,8 @@
 	Properties {
 		_CellSize("Cell Size", Float) = 1.0
 		_Offset ("Lines Offset", Vector) = (0, 0, 0)
+		_MasterWidth("Master Line Width", Range(0, 1)) = 0.1
+		_MasterColor("Master Line Color", Color) = (1,1,1,1)
 		_MainWidth("Main Line Width", Range(0, 1)) = 0.05
 		_MainColor("Main Line Color", Color) = (1,1,1,1)
 		_SecondaryWidth("Secondary Line Width", Range(0, 1)) = 0.02
@@ -34,6 +36,8 @@
 		
 		uniform float _CellSize;
 		uniform half3 _Offset;
+		uniform float _MasterWidth;
+		uniform half4 _MasterColor;
 		uniform float _MainWidth;
 		uniform half4 _MainColor;
 		uniform float _SecondaryWidth;
@@ -54,9 +58,9 @@
 		}
 
 		void surf(Input IN, inout SurfaceOutput o) {
-			half3 pos = IN.worldPos + _Offset;
+			half2 pos = abs(IN.worldPos + _Offset).xz;
 			//lines is 0~1 on each axis, tiling every cellsize in object space
-			half2 lines = abs(fmod(abs(pos.xz), _CellSize) / _CellSize - half2(.5, .5));
+			half2 lines = abs(fmod(abs(pos), _CellSize) / _CellSize - half2(.5, .5));
 			//make sure lines.x is always the largest axis value
 			if (lines.y > lines.x) { lines = lines.yx; }
 
@@ -65,11 +69,20 @@
 			//empirical: blur = k / (cell * min(res)) * depth
 			float blur = AntiAliasBlur / (_CellSize * min(_ScreenParams.x, _ScreenParams.y)) * dist;
 
+			float master = onLine(min(pos.x, pos.y), _MasterWidth, blur);
 			float main = onLineOffset(lines.x, _MainWidth, 0.5, blur);
 			float second = onLine(lines.y, _SecondaryWidth, blur);
 			
 			//mixes background with secondary color then main color.
-			float4 color = lerp(lerp(_BackgroundColor, _SecondaryColor, second), _MainColor, main);
+			float4 color = lerp(
+				lerp(
+					lerp(_BackgroundColor, _SecondaryColor, second),
+					_MainColor,
+					main
+				),
+				_MasterColor,
+				master
+			);
 			
 			float distPercent = min(_NearFadeDistance, dist) / _NearFadeDistance;
 			o.Albedo = color.rgb;

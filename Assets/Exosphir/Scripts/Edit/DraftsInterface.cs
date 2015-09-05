@@ -74,7 +74,7 @@ namespace Edit {
 
             var files = _files;
             if (!string.IsNullOrEmpty(filterString)) {
-                files = files.Where(f => f.Name.Contains(filterString));
+                files = files.Where(f => f.Name.ToLower().Contains(filterString.ToLower()));
             }
 
             var draftNames = files.Select(f => Path.GetFileNameWithoutExtension(f.Name));

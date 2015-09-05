@@ -169,11 +169,13 @@ namespace Edit {
                                      (Input.GetKeyUp(_input.downFloor) ? 1f : 0f);
             var fast = Input.GetKey(_input.fastMovementKey);
             if (fast) floorStepDirection *= FastFloorMultiplier;
-            if (_hasStepped) {
-                _hasStepped = false;
-            } else {
-                if (Mathf.Abs(floorStepDirection) > 0.01) {
-                    Floor = Mathf.Round(Floor + floorStepDirection);
+            if (Mathf.Abs(floorStepDirection) > 0.01) {
+                if (_hasStepped) {
+                    _hasStepped = false;
+                } else {
+                    if (Mathf.Abs(floorStepDirection) > 0.01) {
+                        Floor = Mathf.Round(Floor + floorStepDirection);
+                    }
                 }
             }
 

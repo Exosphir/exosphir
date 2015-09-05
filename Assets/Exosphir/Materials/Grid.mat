@@ -145,11 +145,15 @@ Material:
       data:
         first:
           name: _SecondaryWidth
-        second: .00499999989
+        second: .00249999994
       data:
         first:
           name: _NearFadeDistance
         second: 2.61999989
+      data:
+        first:
+          name: _MasterWidth
+        second: .100000001
     m_Colors:
       data:
         first:
@@ -166,11 +170,11 @@ Material:
       data:
         first:
           name: _MainColor
-        second: {r: 1, g: 1, b: 1, a: .627451003}
+        second: {r: 1, g: 1, b: 1, a: .740999997}
       data:
         first:
           name: _SecondaryColor
-        second: {r: 1, g: 1, b: 1, a: .250980407}
+        second: {r: 1, g: 1, b: 1, a: .125490203}
       data:
         first:
           name: _BackgroundColor
@@ -179,3 +183,7 @@ Material:
         first:
           name: _Offset
         second: {r: 0, g: 0, b: 0, a: 1}
+      data:
+        first:
+          name: _MasterColor
+        second: {r: 1, g: 1, b: 1, a: 1}
