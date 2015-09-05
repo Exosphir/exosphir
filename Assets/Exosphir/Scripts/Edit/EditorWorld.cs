@@ -21,8 +21,8 @@ namespace Edit {
         void Start() {
             _catalog = Catalog.GetInstance();
             _optimizer = BlockOptimizer.GetInstance();
-            _octree = new PointOctree<PlacedItem>(InitialSize, Vector3.zero, 1);
             Grid = GetComponent<Grid>();
+            _octree = new PointOctree<PlacedItem>(InitialSize, Vector3.zero, Grid.CellSize);
             
             var obj = new GameObject("Pool");
             obj.transform.parent = transform;
@@ -107,6 +107,16 @@ namespace Edit {
             Destroy(item);
             Pool.AddTo(entry, go);
             _optimizer.OptimizeNeighbours(position);
+        }
+
+        /// <summary>
+        /// Removes ALL objects from world. Use with caution!
+        /// </summary>
+        public void Clear() {
+            foreach (Transform child in Container) {
+                Destroy(child.gameObject);
+            }
+            _octree = new PointOctree<PlacedItem>(InitialSize, Vector3.zero, Grid.CellSize);
         }
 
         void OnDrawGizmosSelected() {

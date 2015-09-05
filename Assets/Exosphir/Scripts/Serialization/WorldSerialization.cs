@@ -36,100 +36,6 @@ namespace Serialization {
         /// </summary>
         public const string FileExtension = "exom";
 
-		private bool loadWindowOpen = false;
-
-#if UNITY_EDITOR
-        private string _name = "";
-        void OnGUI() {
-			if (!loadWindowOpen) {
-	            GUILayout.BeginArea(new Rect(Screen.width - 100, 0, 100, 150));
-	            _name = GUILayout.TextField(_name);
-	            if (GUILayout.Button("Save")) {
-	                Write(_name);
-	            }
-	            if (GUILayout.Button("Load")) {
-					loadWindowOpen = true;
-	            }
-	            GUILayout.EndArea();
-			} else {
-				Rect windowRect = new Rect((Screen.width / 2) - 200, (Screen.height / 2) - 200, 400, 400);
-				windowRect = GUILayout.Window(0, windowRect, LoadWindow, "Load Window");
-			}
-        }
-
-		private Vector2 scrollPosition;
-		void LoadWindow (int windowID) {
-			_name = GUILayout.TextField(_name);
-			List<string> fileSearchResults = new List<string>();
-
-			DirectoryInfo dir = new DirectoryInfo(SavePath);
-			FileInfo[] info = dir.GetFiles("*." + FileExtension);
-			foreach (FileInfo f in info) {
-				string fileName = f.Name;
-				// Get rid of the file extension without using string.Replace()
-				fileName = fileName.Remove(fileName.Length - (FileExtension.Length + 1));
-
-				// If the user types nothing into search, just list all files
-				if (_name.Length == 0) {
-					fileSearchResults.Add(fileName);
-
-				} else if (_name.Length > 0) {
-					bool matchFound = false;
-					int searchMatches = 0;
-
-					// If the search is longer than the name, dont even bother searching
-					if (_name.Length > fileName.Length) {
-						searchMatches = 0;
-					} else {
-						for (int offset = 0; offset < fileName.Length; offset++) {
-							for (int c = 0; c < _name.Length; c++) {  // lel "c++"
-
-								// Prevent from the 2 variables added together from going out of bounds
-								if (c + offset < fileName.Length) {
-									string tempFileName = fileName.ToLower();
-									string temp_name = _name.ToLower();
-
-									// Check to see if the characters match
-									if (tempFileName[c + offset] == temp_name[c]) {
-										searchMatches++;
-
-										// If all the characters match with _name, return true
-										if (searchMatches == _name.Length) {
-											matchFound = true;
-										}
-									}
-								}
-							}
-
-							// Reset search matches after before every offset change
-							searchMatches = 0;
-						}
-					}
-
-					if (matchFound) {
-						fileSearchResults.Add(fileName);
-					}
-				}
-			}
-
-			scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-
-			for (int i = 0; i < fileSearchResults.Count; i++) {
-				if (GUILayout.Button(fileSearchResults[i])) {
-					_name = fileSearchResults[i];
-					Read(_name);
-					loadWindowOpen = false;
-				}
-			}
-
-			GUILayout.EndScrollView();
-
-			if (GUILayout.Button("Close")) {
-				loadWindowOpen = false;
-			}
-		}
-#endif
-
         /// <summary>
         /// Serializes the current world into a file in the <see cref="SavePath"/>
         /// with the extenson <see cref="FileExtension"/>
@@ -195,6 +101,8 @@ namespace Serialization {
         /// <param name="source">Data source to deserialize from</param>
         /// <param name="editorWorld">The world to deserialize into.</param>
         public void Deserialize(Stream source, EditorWorld editorWorld) {
+            editorWorld.Clear();
+
             var formatter = new BinaryFormatter();
             var world = (SerializedWorld)formatter.Deserialize(source);
             var catalog = Catalog.GetInstance();
