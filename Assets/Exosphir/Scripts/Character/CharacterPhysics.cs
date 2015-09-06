@@ -17,8 +17,7 @@ public class CharacterPhysics : MonoBehaviour {
 
 	[Header("In-air Movement")]
 	public Vector2 inAirMovementForce = new Vector2(10.0f, 10.0f);
-	public float inAirMaxStrafeSpeed = 3.0f;
-	public float inAirMinimumMaxReverseSpeed = 3.0f;
+	public Vector2 inAirMaxSpeed = new Vector2(10.0f, 10.0f);
 
 	[Header("Jumping")]
 	public float jumpSpeed = 3.0f;
@@ -61,7 +60,7 @@ public class CharacterPhysics : MonoBehaviour {
 			oldPosPlatform = currentPlatform.position;
 		}
 
-		Vector3 inputAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+		Vector3 inputAxis = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
 
 		// Subtract platform velocity to the current relative velocity to make sure the character controller doesnt counteract while riding a platform
 		Vector3 platformVelocity = (currentPlatform != null)? currentPlatform.velocity : Vector3.zero;
@@ -70,9 +69,7 @@ public class CharacterPhysics : MonoBehaviour {
 
 		if (grounded) {
 			// Apply strafe multiplier
-			Vector2 tempInputAxis = inputAxis;
 			inputAxis.x *= strafeMultiplier;
-			inputAxis = tempInputAxis;
 
 			// Change max speed based on sprinting or not
 			Vector2 finalMaxSpeed = (Input.GetKey(KeyCode.LeftShift))? sprintMaxSpeed : maxSpeed;
@@ -157,14 +154,14 @@ public class CharacterPhysics : MonoBehaviour {
 			currentPlatform = null;
 
 			// Force on the z axis is only applied when the y inputAxis is negitive, to allow the user to slow down in mid air
-			Vector3 forceDir = new Vector3(inputAxis.x * inAirMovementForce.x, 0.0f, (Mathf.Sign (inputAxis.y) == -1.0f)? inputAxis.y * inAirMovementForce.y : 0.0f);
+			Vector3 forceDir = new Vector3(inputAxis.x * inAirMovementForce.x, 0.0f, inputAxis.y * inAirMovementForce.y);
 
-			// Caps strafing in mid air
-			if (Mathf.Abs(relativeVelocity.x) >= inAirMaxStrafeSpeed) {
+			float dot = Vector2.Dot(new Vector2(relativeVelocity.x, relativeVelocity.z), inputAxis);
+
+			if (Mathf.Sign(dot) * Mathf.Abs(relativeVelocity.x) >= inAirMaxSpeed.x) {
 				forceDir.x = 0.0f;
 			}
-			// Caps the force so the player cant keep accelerating backwards
-			if (Mathf.Abs(relativeVelocity.z) <= inAirMinimumMaxReverseSpeed) {
+			if (Mathf.Sign(dot) * Mathf.Abs(relativeVelocity.z) >= inAirMaxSpeed.y) {
 				forceDir.z = 0.0f;
 			}
 
