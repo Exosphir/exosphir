@@ -7,6 +7,9 @@ public class CharacterPhysics : MonoBehaviour {
 	public Vector2 movementForce = new Vector2(100.0f, 100.0f); // x = Horizontal/Sideways force, y = Forward force
 	public Vector2 counteractForce = new Vector2(-50.0f, -50.0f); // x = Horizontal/Sideways force, y = Forward force
 	public Vector2 maxSpeed = new Vector2(10.0f, 10.0f); // x = Horizontal/Sideways, y = Forward
+	public Vector2 sprintMovementForce = new Vector2(100.0f, 100.0f); // x = Horizontal/Sideways force, y = Forward force
+	public Vector2 sprintMaxSpeed = new Vector2(10.0f, 10.0f);
+	public AnimationCurve forceCurve = new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 1));
 
 	[Header("Movement Multipliers")]
 	public float strafeMultiplier = 0.7f;
@@ -34,6 +37,9 @@ public class CharacterPhysics : MonoBehaviour {
 	[HideInInspector]
 	public Rigidbody groundedObject;
 
+	[HideInInspector]
+	public bool isThereWall = false;
+	
 	bool colliding;
 	float collisionStartTime;
 	float collisionMagnitude;
@@ -68,6 +74,9 @@ public class CharacterPhysics : MonoBehaviour {
 			inputAxis.x *= strafeMultiplier;
 			inputAxis = tempInputAxis;
 
+			// Change max speed based on sprinting or not
+			Vector2 finalMaxSpeed = (Input.GetKey(KeyCode.LeftShift))? sprintMaxSpeed : maxSpeed;
+
 			// Apply diagonal multiplier
 			if (Mathf.Abs(inputAxis.x) > 0.0f && Mathf.Abs(inputAxis.y) > 0.0f) {
 				inputAxis *= diagonalMultiplier;
@@ -87,7 +96,7 @@ public class CharacterPhysics : MonoBehaviour {
 			// Compute counteracting force
 			// When relativeVelocity is greater than max speed, always have counteracting force on no matter about the input
 			// Also multiply the relativeVelocity.normalized to the final outputs to force the body to slow down faster
-			Vector3 counteractingForce = new Vector3((((Mathf.Abs(relativeVelocity.x) >= maxSpeed.x)? 1.0f : inputAxisInverseMultiplier.x) * counteractForce.x) * relativeVelocityNorm.x, 0.0f, (((Mathf.Abs(relativeVelocity.z) >= maxSpeed.y)? 1.0f : inputAxisInverseMultiplier.y) * counteractForce.y) * relativeVelocityNorm.z);
+			Vector3 counteractingForce = new Vector3((((Mathf.Abs(relativeVelocity.x) >= finalMaxSpeed.x)? 1.0f : inputAxisInverseMultiplier.x) * counteractForce.x) * relativeVelocityNorm.x, 0.0f, (((Mathf.Abs(relativeVelocity.z) >= finalMaxSpeed.y)? 1.0f : inputAxisInverseMultiplier.y) * counteractForce.y) * relativeVelocityNorm.z);
 
 			// Collision Magnitude >= max, then output = 1.  Collision Magnitude <= min, then output = 0
 			float collisionMultiplier = Mathf.Abs(((collisionMagnitude - minColMagnitude) / maxColMagnitude) - 1.0f);
@@ -111,8 +120,10 @@ public class CharacterPhysics : MonoBehaviour {
 			// Apply the counteracting force
 			body.AddRelativeForce(counteractingForce, ForceMode.Acceleration);
 
+			Vector2 finalMovementForce = (Input.GetKey(KeyCode.LeftShift))? sprintMovementForce : movementForce;
+
 			// Compute force dir simply like a normal character controller
-			Vector3 forceDir = new Vector3(inputAxis.x * movementForce.x, 0.0f, inputAxis.y * movementForce.y);
+			Vector3 forceDir = new Vector3(inputAxis.x * finalMovementForce.x, 0.0f, inputAxis.y * finalMovementForce.y);
 
 			Vector3 relativeColNormal = transform.InverseTransformDirection(collisionNormal);
 
@@ -120,18 +131,17 @@ public class CharacterPhysics : MonoBehaviour {
 			if (colliding && Vector3Round(relativeColNormal) != Vector3.up) {
 				forceDir *= collisionMultiplier;
 			}
-			// Double forceDir when colliding to ground to help prevent after-jump slow startup
-			if (colliding && Vector3Round(relativeColNormal) == Vector3.up) {
-				forceDir *= 2.0f;
-			}
 
 			// Attempt to cap the speed of the body at max speed by zeroing out the forceDir
-			if (Mathf.Abs(relativeVelocity.x) >= maxSpeed.x) {
+			if (Mathf.Abs(relativeVelocity.x) >= finalMaxSpeed.x) {
 				forceDir.x = 0.0f;
 			}
-			if (Mathf.Abs(relativeVelocity.z) >= maxSpeed.y) {
+			if (Mathf.Abs(relativeVelocity.z) >= finalMaxSpeed.y) {
 				forceDir.z = 0.0f;
 			}
+
+			// Apply force curve based on current speed
+			forceDir *= forceCurve.Evaluate(relativeVelocity.magnitude / ((finalMaxSpeed.x + finalMaxSpeed.y) / 2));
 
 			// Apply main force
 			body.AddRelativeForce(forceDir, ForceMode.Acceleration);
@@ -156,6 +166,11 @@ public class CharacterPhysics : MonoBehaviour {
 			// Caps the force so the player cant keep accelerating backwards
 			if (Mathf.Abs(relativeVelocity.z) <= inAirMinimumMaxReverseSpeed) {
 				forceDir.z = 0.0f;
+			}
+
+			// Completely zero out force if colliding in mid air
+			if (isThereWall) {
+				forceDir = Vector3.zero;
 			}
 
 			// Apply main in-air force
