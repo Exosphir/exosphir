@@ -17,7 +17,7 @@ namespace Edit {
                 visual.transform.SetParent(transform);
                 visual.transform.localPosition = Vector3.zero;
                 visual.transform.localRotation = Quaternion.identity;
-                visual.transform.localScale = Vector3.one;
+				visual.transform.localScale = value.transform.localScale;
                 visual.name = value.name;
             }
         }

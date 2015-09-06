@@ -54,7 +54,7 @@ namespace Edit {
             obj.transform.SetParent(Container);
             obj.transform.position = position;
             obj.transform.rotation = rotation;
-            obj.transform.localScale = Vector3.one * scale;
+			obj.transform.localScale = item.Model.transform.localScale * scale;
             
             var placed = obj.AddComponent<PlacedItem>();
             placed.UniqueInSlot = unique;
