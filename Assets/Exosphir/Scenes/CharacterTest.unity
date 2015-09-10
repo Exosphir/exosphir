@@ -454,6 +454,18 @@ Prefab:
       propertyPath: sprintMaxSpeed.y
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 11490530, guid: df3067635d1044cd58009d103491a80b, type: 2}
+      propertyPath: strafeMultiplier
+      value: .899999976
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490530, guid: df3067635d1044cd58009d103491a80b, type: 2}
+      propertyPath: inAirMaxSpeed.x
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11490530, guid: df3067635d1044cd58009d103491a80b, type: 2}
+      propertyPath: inAirMaxSpeed.y
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: df3067635d1044cd58009d103491a80b, type: 2}
   m_IsPrefabParent: 0
