@@ -47,7 +47,7 @@ namespace Edit {
         /// <param name="position">Position of the new item</param>
         /// <param name="rotation">Rotation of the item</param>
         /// <param name="scale">Uniform scaling factor of the item</param>
-        /// <param name="snap"></param>
+        /// <param name="unique">Whether this block must be unique</param>
         /// <returns>A PlacedItem denoting the just-placed item</returns>
         public PlacedItem PlaceItemAt(CatalogItem item, Vector3 position, Quaternion rotation, float scale, bool unique) {
             var obj = Pool.Get(item, item.Category.PoolFillWhenDry);

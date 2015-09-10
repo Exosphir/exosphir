@@ -95,7 +95,7 @@ namespace Edit {
             //collect normals for faces without optimizable neighbours
             var faceNormals = new List<Vector3>(6);
             foreach (var kvp in OffsetsToUvs) {
-                var offset = kvp.Key;
+                var offset = kvp.Key * _world.Grid.CellSize;
                 var optimizableNeighbours = _world.GetObjectsInCell(cell + offset).Where(IsOptimizable).ToList();
                 var entries = optimizableNeighbours.Select(n => n.CatalogEntry);
                 if (entries.Any(n => n.Id == item.CatalogEntry.Id || item.CatalogEntry.OptimizableWith(n))) {
@@ -105,15 +105,18 @@ namespace Edit {
                         }
                     }
                 } else {
-                    faceNormals.Add(offset);
+                    var unrotatedNormal = go.transform.InverseTransformDirection(kvp.Key);
+                    var normal = _offsets.First(n => AlmostEqual(unrotatedNormal, n)); //prevent floating point errors
+                    faceNormals.Add(normal);
                 }
             }
-            var mask = GetMaskForNormals(faceNormals.Select(n => go.transform.InverseTransformDirection(n)));
-            go.GetComponent<MeshFilter>().mesh = _meshCache[mask];
+            var mask = GetMaskForNormals(faceNormals);
+            go.GetComponentInChildren<MeshFilter>().mesh = _meshCache[mask];
         }
 
         private int GetMaskForNormals(IEnumerable<Vector3> normals) {
             return normals
+                .Where(n => _offsets.Contains(n))
                 .Select(n => 1 << _offsets.IndexOf(n))
                 .Aggregate(0, (mask, o) => mask | o);
         }
@@ -126,7 +129,7 @@ namespace Edit {
                 var baseVertIndex = i * VertsPerFace;
                 var baseFaceIndex = i * VertsForQuad;
                 var normal = normals[i];
-                var position = normal / 2; //in a 1x1x1 cube, a faces position is 0.5 away from center
+                var position = normal / 2;
 
                 var planar = normal.x + normal.y + normal.z > 0 //remember theres always only 1 nonzero axis, this is basically a or
                     ? Vector3.one - normal //equivalent operations for negative and positive normals
@@ -168,7 +171,7 @@ namespace Edit {
         /// <returns>A list of offsets from cell and their associated neighbours</returns>
         private IEnumerable<KeyValuePair<Vector3, PlacedItem>> GetOptimizableNeighbours(Vector3 cell) {
             return OffsetsToUvs
-                .Select(kvp => new KeyValuePair<Vector3, PlacedItem[]>(kvp.Key, _world.GetObjectsInCell(cell + kvp.Key).ToArray())) //gets the objects in each offset
+                .Select(kvp => new KeyValuePair<Vector3, PlacedItem[]>(kvp.Key, _world.GetObjectsInCell(cell + kvp.Key * _world.Grid.CellSize).ToArray())) //gets the objects in each offset
                 .Where(kvp => kvp.Value.Length > 0 && IsOptimizable(kvp.Value[0])) //filters for objects that are optimizable
                 .Select(kvp => new KeyValuePair<Vector3, PlacedItem>(kvp.Key, kvp.Value[0])); //finally return the offset and associated object
         }
@@ -185,7 +188,7 @@ namespace Edit {
 
             return item.CatalogEntry.Optimizable
                 && item.UniqueInSlot
-                && AlmostEqual(trans.localScale, Vector3.one)
+                && AlmostEqual(trans.localScale, Vector3.one * _world.Grid.CellSize)
                 && IsOrthogonalRotation(trans.rotation);
         }
 

@@ -21,17 +21,17 @@ namespace Edit {
         }
 
         public void Select() {
-            Button.enabled = false;
+            Button.interactable = false;
         }
 
         public void Unselect() {
-            Button.enabled = true;
+            Button.interactable = true;
         }
 
         protected virtual void OnClick() {
             var handler = Click;
             if (handler != null) {
-                handler(this );
+                handler(this);
             }
         }
     }

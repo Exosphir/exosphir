@@ -8,15 +8,23 @@ namespace Edit {
     public sealed class ItemPlacement : SingletonBehaviour<ItemPlacement> {
         public CatalogInterface CatalogInterface;
         public ItemCursor Cursor;
+
+        [Header("Grid")]
         public Grid Grid;
         public float GridVerticalOffset = 0.005f;
+
+        [Header("Visual")]
         public float CursorDamping = 20f;
         public float FloorSwitchDamping = 10f;
-        public float FastFloorMultiplier = 10;
-        public float FineFloorMultiplier = 0.1f;
-        public float FineRotationStep = 5f;
         public float RotationDamping = 10f;
         public float ScaleDamping = 10f;
+
+        [Header("Floor and Step")]
+        public float FastFloorMultiplier = 10;
+        public float FineFloorMultiplier = 0.1f;
+
+        [Header("Transform")]
+        public float FineRotationStep = 5f;
         public float ScaleStep = 0.2f;
         public float MinScale = 0.4f;
         public float MaxScale = 5f;
@@ -91,14 +99,11 @@ namespace Edit {
             if (_currentItem == null) {
                 return;
             }
-            var canPlace = false;
-            var here = _world.GetObjectsInCell(MouseInGrid).ToArray();
+            var canPlace = Input.GetMouseButtonDown(0) && !_snap;
 
-            if (Input.GetMouseButtonDown(0) && !_snap) {
-                canPlace = true; //if free place only place on click to evade placing multiple blocks
-            }
             //dont place if there is a UniqueInSlot item here already and we have snap on
             if (!canPlace && Input.GetMouseButton(0)) {
+                var here = _world.GetObjectsInCell(MouseInGrid).ToArray();
                 if (_snap && !(here.Any() && here.First().UniqueInSlot)) {
                     canPlace = true;
                 }
@@ -121,11 +126,11 @@ namespace Edit {
         private void UpdateCursor() {
             var newCurrent = CatalogInterface.CurrentItem;
             if (newCurrent != _currentItem && newCurrent != null) {
-                _currentItem = newCurrent;
                 Cursor.Selected = newCurrent.Model;
                 Scale = 1f;
                 ItemRotationEuler = Vector3.zero;
             }
+            _currentItem = newCurrent;
             if (_currentItem == null) return;
 
             if (_currentItem.Rotatable) {
@@ -158,6 +163,12 @@ namespace Edit {
                 var delta = _input.scroll * ScaleStep;
                 Scale = Mathf.Clamp(Scale + delta, MinScale, MaxScale);
             }
+
+            if (Input.GetKeyUp(_input.fineFloor) && !_hasStepped) {
+                Cursor.Selected = null;
+                CatalogInterface.CurrentItem = null;
+            }
+
             Cursor.transform.position = Vector3.Lerp(Cursor.transform.position, MouseInGrid, CursorDamping * Time.deltaTime);
             Cursor.transform.rotation = Quaternion.Lerp(Cursor.transform.rotation, Quaternion.Euler(ItemRotationEuler), RotationDamping * Time.deltaTime);
             Cursor.transform.localScale = Vector3.Lerp(Cursor.transform.localScale, Vector3.one * Scale, ScaleDamping * Time.deltaTime);
@@ -170,11 +181,9 @@ namespace Edit {
             var fast = Input.GetKey(_input.fastMovementKey);
             if (fast) floorStepDirection *= FastFloorMultiplier;
             if (Mathf.Abs(floorStepDirection) > 0.01) {
-                if (_hasStepped) {
-                    _hasStepped = false;
-                } else {
+                if (!_hasStepped) {
                     if (Mathf.Abs(floorStepDirection) > 0.01) {
-                        Floor = Mathf.Round(Floor + floorStepDirection);
+                        Floor = Grid.Step(Floor + floorStepDirection * Grid.CellSize);
                     }
                 }
             }
@@ -184,8 +193,11 @@ namespace Edit {
                 if (Mathf.Abs(scroll) > 0.01) {
                     _zoom = false;
                     _hasStepped = true;
-                    Floor += FineFloorMultiplier * scroll;
+                    Floor += FineFloorMultiplier * scroll * Grid.CellSize;
                 }
+            }
+            if (_hasStepped && (Input.GetKeyUp(_input.fineFloor) || Input.GetKeyUp(_input.upFloor) || Input.GetKeyUp(_input.downFloor))) {
+                _hasStepped = false;
             }
 
             CurrentFloorHeight = Mathf.Lerp(CurrentFloorHeight, Floor, FloorSwitchDamping * Time.deltaTime);

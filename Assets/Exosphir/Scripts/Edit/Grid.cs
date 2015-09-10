@@ -23,11 +23,15 @@ namespace Edit {
             return new Rect(center.x - sizeX / 2, center.z - sizeZ / 2, sizeX, sizeZ);
         }
 
+        public float Step(float value) {
+            return Mathf.Floor(value / CellSize) * CellSize;
+        }
+
         public Vector3 Snap(Vector3 position) {
             var rect = GetHorizontalPlaneRect();
-            var snapX = Mathf.Floor(position.x / CellSize) * CellSize;
-            var snapY = Mathf.Floor(position.y / CellSize) * CellSize;
-            var snapZ = Mathf.Floor(position.z / CellSize) * CellSize;
+            var snapX = Step(position.x);
+            var snapY = Step(position.y);
+            var snapZ = Step(position.z);
             return new Vector3 {
                 x = Mathf.Clamp(snapX, rect.xMin, rect.xMax) + CellSize / 2f,
                 y = snapY + CellSize / 2f,

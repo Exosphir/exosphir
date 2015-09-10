@@ -27,11 +27,13 @@ namespace Edit {
         public CatalogItem CurrentItem {
             get { return _currentItem; }
             set {
-                if (_currentCategory.Contains(value)) {
+                _currentItem = value;
+                if (value == null) {
                     _currentItemButton.Unselect();
                 }
-                _currentItem = value;
-                CurrentCategory = value.Category;
+                if (value != null) {
+                    CurrentCategory = value.Category;
+                }
             }
         }
         
@@ -58,8 +60,8 @@ namespace Edit {
         }
 
         private void ButtonClicked(CatalogItemButton button) {
-            _currentItemButton = button;
             CurrentItem = button.Item;
+            _currentItemButton = button;
         }
 
         public void Start() {
