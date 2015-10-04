@@ -9,15 +9,21 @@ public class CharacterPhysicsSurroundingsCheck : MonoBehaviour {
 		Sides
 	};
 
+	public bool enableDebug = false;
+	
+	public bool setPlayerBoolean = true;
 	public AreaToCheck checkArea = AreaToCheck.Ground;
 
 	public CharacterPhysics player;
-	
-	List<GameObject> collidedObjects = new List<GameObject>();
+
+	[HideInInspector]
+	public List<GameObject> collidedObjects = new List<GameObject>();
 	
 	void Start () {
-		if (player == null) {
-			player = transform.parent.GetComponent<CharacterPhysics>();
+		if (setPlayerBoolean) {
+			if (player == null) {
+				player = transform.parent.GetComponent<CharacterPhysics>();
+			}
 		}
 	}
 	
@@ -34,16 +40,36 @@ public class CharacterPhysicsSurroundingsCheck : MonoBehaviour {
 	}
 	
 	void Update () {
+		if (enableDebug) {
+			Debug.Log (collidedObjects.Count);
+		}
+
 		bool colliding = (collidedObjects.Count > 0);
 
-		switch (checkArea) {
-		case AreaToCheck.Ground:
-			player.grounded = colliding;
-			break;
+		if (setPlayerBoolean) {
+			switch (checkArea) {
+			case AreaToCheck.Ground:
+				player.grounded = colliding;
 
-		case AreaToCheck.Sides:
-			player.isThereWall = colliding;
-			break;
+				bool anyBody = false;
+
+				foreach (GameObject obj in collidedObjects) {
+					if (obj.GetComponent<Rigidbody>() != null) {
+						player.currentPlatform = obj.GetComponent<Rigidbody>();
+						anyBody = true;
+					}
+				}
+
+				if (!anyBody) {
+					player.currentPlatform = null;
+				}
+
+				break;
+
+			case AreaToCheck.Sides:
+				player.isThereWall = colliding;
+				break;
+			}
 		}
 	}
 }
