@@ -71,7 +71,14 @@ public class Continuity : MonoBehaviour {
 		playerBody.velocity = Vector3.zero;
 		playerBody.angularVelocity = Vector3.zero;
 
-		playerBody.position = Vector3.zero;
+        if (GameObject.FindWithTag("StartPoint") != null)
+        {
+            playerBody.position = GameObject.FindWithTag("StartPoint").transform.position;
+        }
+        else
+        {
+            playerBody.position = Vector3.zero;
+        }
 	}
 
 	public void SetCurrentStatus (LevelStatus newStatus) {

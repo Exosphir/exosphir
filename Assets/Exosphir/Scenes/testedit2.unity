@@ -480,9 +480,10 @@ MonoBehaviour:
   - {fileID: 830526624}
   - {fileID: 248951403}
   - {fileID: 1256425240}
+  - {fileID: 812111351}
   Name: Misc
   PooledPerItem: 10
-  PoolFillWhenDry: 5
+  PoolFillWhenDry: 169
 --- !u!114 &392659155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1631,6 +1632,26 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 811221038}
+--- !u!114 &812111351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b568de031bda7a04790e36bab0600e0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Model: {fileID: 150830, guid: 1fe7dfe10f452df49899dbf31584f91b, type: 2}
+  PreviewImage: {fileID: 1104303030}
+  Groups: []
+  Rotatable: 1
+  Scalable: 0
+  Optimizable: 0
+  OptimizationGroups: []
+  Id: 11
+  _category: {fileID: 355741785}
 --- !u!114 &830526624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1998,6 +2019,21 @@ MonoBehaviour:
   DistanceToPivot: 2
   PivotPosition: {x: 0, y: 0, z: 0}
   PivotRotation: {x: 0.35355324, y: -0.35355347, z: -0.14644659, w: -0.8535535}
+--- !u!114 &1104303030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80040e1a5a15a3645b0179b058bf28f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _subject: {fileID: 812111351}
+  DistanceToPivot: 5
+  PivotPosition: {x: 0, y: 0, z: 0}
+  PivotRotation: {x: 0.35355324, y: -0.35355344, z: -0.14644657, w: -0.8535535}
 --- !u!114 &1126990355
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2399,6 +2435,7 @@ MonoBehaviour:
   - {fileID: 830526624}
   - {fileID: 248951403}
   - {fileID: 1256425240}
+  - {fileID: 812111351}
   Categories:
   - {fileID: 355741785}
 --- !u!114 &1425560095
@@ -2550,7 +2587,7 @@ MonoBehaviour:
   _subject: {fileID: 974874277}
   DistanceToPivot: 5
   PivotPosition: {x: 0, y: 0, z: 0}
-  PivotRotation: {x: 0.35355324, y: -0.35355347, z: -0.14644659, w: -0.8535535}
+  PivotRotation: {x: 0.35355324, y: -0.35355344, z: -0.14644657, w: -0.8535535}
 --- !u!114 &1505011451
 MonoBehaviour:
   m_ObjectHideFlags: 0
