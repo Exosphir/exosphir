@@ -15,6 +15,8 @@ public class Continuity : MonoBehaviour {
 	public GameObject origin;
 	public GameObject[] objectsToEnableOnEdit;
 
+    private GameObject startFlag;
+
 	void Update () {
 		if (oldCurrentStatus != currentStatus) {
 			if (currentStatus == LevelStatus.Edit) {
@@ -73,10 +75,17 @@ public class Continuity : MonoBehaviour {
 
         if (GameObject.FindWithTag("StartPoint") != null)
         {
-            playerBody.position = GameObject.FindWithTag("StartPoint").transform.position;
+			//setting a reference to the flag to improve performance and reduce code length
+            startFlag = GameObject.FindWithTag("StartPoint");
+			//positioning and rotating the player to be in front and right under the cloth of the flag, and facing where the cloth faces.
+            playerBody.position = startFlag.transform.position;
+			playerBody.position += startFlag.transform.forward * 1f;
+			playerBody.position += startFlag.transform.up * 2f;
+			playerBody.rotation = startFlag.transform.rotation;
         }
         else
         {
+			//default starting position.
             playerBody.position = Vector3.zero;
         }
 	}
