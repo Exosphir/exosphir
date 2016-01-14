@@ -60,7 +60,7 @@ public class CharacterPhysicsSurroundingsCheck : MonoBehaviour {
 					}
 				}
 
-				if (!anyBody) {
+				if (collidedObjects.Count == 0 || !anyBody) {
 					player.currentPlatform = null;
 				}
 

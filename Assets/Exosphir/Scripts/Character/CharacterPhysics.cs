@@ -27,9 +27,11 @@ public class CharacterPhysics : MonoBehaviour {
 	public float minColMagnitude = 7.0f;
 	public float maxColMagnitude = 10.0f;
 	public float afterColTime = 1.0f;
+	public float newtonianMultiplier = 0.7f;
+	public float maxPlatformVelocity = 7.0f;
+	public float maxPlatformRotationVelocity = 7.0f;
 
 	[Header("Ledge Hanging")]
-	public float maxPlatformVelocity = 7.0f;
 	public float ledgeMoveVelocity = 1.0f;
 	public float pushOffLedgeSpeed = 2.0f;
 	public float pushUpForce = 3.0f;
@@ -71,6 +73,9 @@ public class CharacterPhysics : MonoBehaviour {
 	public Rigidbody currentPlatform;
 
 	Vector3 oldPosPlatform;
+	Quaternion oldRotPlatform;
+	bool groundedFirstTime = true;
+	bool hangingFirstTime = false;
 
 	void Start () {
 		body = GetComponent<Rigidbody>();
@@ -91,6 +96,8 @@ public class CharacterPhysics : MonoBehaviour {
 		Vector3 relativeVelocityNorm = relativeVelocity.normalized;
 
 		if (!ledgeHanging) {
+			hangingFirstTime = true;
+
 			if (grounded) {
 				// Apply strafe multiplier
 				inputAxis.x *= strafeMultiplier;
@@ -105,10 +112,27 @@ public class CharacterPhysics : MonoBehaviour {
 
 				// Move character with current platform
 				if (currentPlatform != null) {
+					// Set the oldPos platform on landing to advoid teleporting
+					if (groundedFirstTime) {
+						oldPosPlatform = currentPlatform.position;
+						oldRotPlatform = currentPlatform.rotation;
+					}
+
 					Vector3 posDelta = currentPlatform.position - oldPosPlatform;
+					Vector3 rotDelta = currentPlatform.rotation.eulerAngles - oldRotPlatform.eulerAngles;
+
+					if (rotDelta.magnitude < maxPlatformRotationVelocity) {
+						// Calculate the rotation realitive to origin, then translate it back to the players area
+						Vector3 finalPlatformRot = RotatePoint(transform.position - currentPlatform.position, rotDelta) + currentPlatform.position;
+
+						body.position = finalPlatformRot;
+					}
+					
 					body.position += posDelta;
 
+					// Set old values for calculating delta
 					oldPosPlatform = currentPlatform.position;
+					oldRotPlatform = currentPlatform.rotation;
 
 					// If platform is moving over a certain speed, kick player off
 					if (posDelta.magnitude >= maxPlatformVelocity) {
@@ -177,10 +201,20 @@ public class CharacterPhysics : MonoBehaviour {
 					Vector3 vel = body.velocity;
 					vel.y = jumpSpeed;
 					body.velocity = vel;
+
+					if (currentPlatform != null) {
+						// Apply force at position for a more realisitic force application
+						// Multiply the mass into the force to simulate more force is needed to make a heavy character jump
+						currentPlatform.AddForceAtPosition(new Vector3(0.0f, -jumpSpeed * body.mass * newtonianMultiplier, 0.0f), transform.position - (Vector3.down * (GetComponent<CapsuleCollider>().height / 2)), ForceMode.Impulse);
+					}
 				}
+
+				groundedFirstTime = false;
 			} else {
 				// Make current platform null
 				currentPlatform = null;
+
+				groundedFirstTime = true;
 
 				// Force on the z axis is only applied when the y inputAxis is negitive, to allow the user to slow down in mid air
 				Vector3 forceDir = new Vector3(inputAxis.x * inAirMovementForce.x, 0.0f, inputAxis.y * inAirMovementForce.y);
@@ -217,6 +251,8 @@ public class CharacterPhysics : MonoBehaviour {
 			// Set currentPlatform to ledgeObject if the ledgeObject has a rigidbody
 			if (ledgeObject.GetComponent<Rigidbody>() != null) {
 				currentPlatform = ledgeObject.GetComponent<Rigidbody>();
+			} else {
+				currentPlatform = null;
 			}
 			
 			// Rotate character towards ledge
@@ -247,10 +283,27 @@ public class CharacterPhysics : MonoBehaviour {
 
 			// Move character with current platform
 			if (currentPlatform != null) {
+				// Set the oldPos platform on landing to advoid teleporting
+				if (hangingFirstTime) {
+					oldPosPlatform = currentPlatform.position;
+					oldRotPlatform = currentPlatform.rotation;
+				}
+
 				Vector3 posDelta = currentPlatform.position - oldPosPlatform;
+				Vector3 rotDelta = currentPlatform.rotation.eulerAngles - oldRotPlatform.eulerAngles;
+				
+				if (rotDelta.magnitude < maxPlatformRotationVelocity) {
+					// Calculate the rotation realitive to origin, then translate it back to the players area
+					Vector3 finalPlatformRot = RotatePoint(transform.position - currentPlatform.position, rotDelta) + currentPlatform.position;
+					
+					body.position = finalPlatformRot;
+				}
+
 				body.position += posDelta;
 				
+				// Set old values for calculating delta
 				oldPosPlatform = currentPlatform.position;
+				oldRotPlatform = currentPlatform.rotation;
 				
 				// If platform is moving over a certain speed, kick player off
 				if (posDelta.magnitude >= maxPlatformVelocity) {
@@ -264,11 +317,17 @@ public class CharacterPhysics : MonoBehaviour {
 				
 				velocity += Mathf.Abs(Mathf.Abs(inputAxis.y) - 1.0f) * transform.TransformVector(Vector3.up * pushUpForce);
 				velocity += Mathf.Clamp01(inputAxis.y) * transform.TransformVector(Vector3.up * pushUpForce);
+
+				if (currentPlatform != null) {
+					currentPlatform.AddForceAtPosition(-velocity * body.mass * newtonianMultiplier, transform.position - (Vector3.up * (GetComponent<CapsuleCollider>().height / 2)), ForceMode.Impulse);
+				}
 				
 				EjectFromWall();
 			}
 			
 			body.velocity = velocity;
+
+			hangingFirstTime = false;
 		}
 	}
 
@@ -310,6 +369,9 @@ public class CharacterPhysics : MonoBehaviour {
 		}
 	}
 
+	/////////////////////////
+	/// Utility stuff
+
 	// Round vector3 to nearest 10th
 	Vector3 Vector3Round (Vector3 a) {
 		Vector3 finalVector;
@@ -319,5 +381,61 @@ public class CharacterPhysics : MonoBehaviour {
 		finalVector.z = Mathf.Round(a.z * 10.0f) / 10.0f;
 
 		return finalVector;
+	}
+
+	// All the angles should be in degrees
+	public Vector3 RotatePoint (Vector3 objectPosition, Vector3 rotations) {
+		// Make all the matrices identity matrices so that we dont have to worry about the 1's in the final rotation matrix
+		Matrix4x4 x = Matrix4x4.identity;
+		Matrix4x4 y = Matrix4x4.identity;
+		Matrix4x4 z = Matrix4x4.identity;
+		
+		// Get rid of that one 1 in the corner that nobody likes
+		x[3, 3] = 0;
+		y[3, 3] = 0;
+		z[3, 3] = 0;
+		
+		// https://en.wikipedia.org/wiki/Rotation_matrix#In_three_dimensions
+		
+		/* Set the x rotation matrix
+		 * | 1       0       0   |
+		 * | 0    cos(x) -sin(x) |
+		 * | 0    sin(x)  cos(x) |
+		*/
+		
+		x[1, 1] = Mathf.Cos (rotations.x * Mathf.Deg2Rad);
+		x[2, 1] = Mathf.Sin (rotations.x * Mathf.Deg2Rad);
+		x[1, 2] = -Mathf.Sin (rotations.x * Mathf.Deg2Rad);
+		x[2, 2] = Mathf.Cos(rotations.x * Mathf.Deg2Rad);
+		
+		/* Set the y rotation matrix
+		 * | cos(y)  0    sin(y) |
+		 * | 0       1      0    |
+		 * | -sin(y) 0    cos(y) |
+		*/
+		
+		y[0, 0] = Mathf.Cos (rotations.y * Mathf.Deg2Rad);
+		y[0, 2] = Mathf.Sin (rotations.y * Mathf.Deg2Rad);
+		y[2, 0] = -Mathf.Sin (rotations.y * Mathf.Deg2Rad);
+		y[2, 2] = Mathf.Cos (rotations.y * Mathf.Deg2Rad);
+		
+		/* Set the y rotation matrix
+		 * | cos(z) -sin(z)  0   |
+		 * | sin(z) cos(z)   0   |
+		 * | 0        0      1   |
+		*/
+		
+		z[0, 0] = Mathf.Cos (rotations.z * Mathf.Deg2Rad);
+		z[0, 1] = -Mathf.Sin (rotations.z * Mathf.Deg2Rad);
+		z[1, 0] = Mathf.Sin (rotations.z * Mathf.Deg2Rad);
+		z[1, 1] = Mathf.Cos (rotations.z * Mathf.Deg2Rad);
+		
+		// Multiply all the matrices
+		Matrix4x4 finalRotation = x * y * z;
+		
+		// Rotate position around center
+		Vector3 finalPosition = finalRotation.MultiplyPoint3x4(objectPosition);
+		
+		return finalPosition;
 	}
 }
