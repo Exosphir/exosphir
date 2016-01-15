@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Extensions;
 
 namespace Edit {
     public class CameraMovement : MonoBehaviour {
@@ -30,7 +31,7 @@ namespace Edit {
                 RotateCamera(_input.mouse);
             }
 
-            if (EnableZoom) {
+            if (EnableZoom && this.PointerOnWorld()) {
                 ZoomCamera(_input.scroll);
             }
         }
