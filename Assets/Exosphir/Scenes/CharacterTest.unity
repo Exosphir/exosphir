@@ -602,7 +602,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 744326823}
-  - 114: {fileID: 744326824}
+  - 114: {fileID: 744326825}
   m_Layer: 0
   m_Name: CameraPivot
   m_TagString: Untagged
@@ -622,23 +622,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 160881171}
   m_RootOrder: 0
---- !u!114 &744326824
+--- !u!114 &744326825
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11471044, guid: df3067635d1044cd58009d103491a80b,
-    type: 2}
+  m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 744326822}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 583f2574cc27040c7b2b1518a8d9e555, type: 3}
+  m_Script: {fileID: 11500000, guid: 38c2186120ea44524a59a40acafe60fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clampInDegrees: {x: 360, y: 180}
-  lockCursor: 0
+  characterBody: {fileID: 776246489}
   sensitivity: {x: .699999988, y: 1.20000005}
   smoothing: {x: 3, y: 3}
-  characterBody: {fileID: 776246489}
+  clampXMin: -90
+  clampXMax: 90
 --- !u!1001 &757808525
 Prefab:
   m_ObjectHideFlags: 0
@@ -736,7 +735,7 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  strafeMultiplier: .699999988
+  strafeMultiplier: .850000024
   diagonalMultiplier: .75
   inAirMovementForce: {x: 10, y: 10}
   inAirMaxSpeed: {x: 4, y: 4}
@@ -755,7 +754,7 @@ MonoBehaviour:
   - {fileID: 1625767059}
   - {fileID: 718423413}
   checkerLengths: 1
-  look: {fileID: 744326824}
+  look: {fileID: 744326825}
   ledgeHanging: 0
   ledgeNormal: {x: 0, y: 0, z: 0}
   ledgeCharacterDir: {x: 0, y: 0, z: 0}

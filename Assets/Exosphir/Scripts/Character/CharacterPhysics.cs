@@ -38,7 +38,7 @@ public class CharacterPhysics : MonoBehaviour {
 	public Vector3 pushOffVector = new Vector3(0.0f, 1.0f, -1.0f);
 	public Transform[] confirmLedgeHangingRaycasts;
 	public float checkerLengths = 1.0f;
-	public MouseLook look;
+	public CharacterLook look;
 
 	[HideInInspector]
 	public bool ledgeHanging;
