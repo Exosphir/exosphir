@@ -19,6 +19,9 @@ public class LedgeDetection : MonoBehaviour {
 
 	public float maxAngle = 45.0f;
 
+	public Transform[] denyLedgeHangingRaycasts;
+	public float denyCheckLengths = 1.0f;
+
 	void Start () {
 		if (character == null) {
 			character = transform.parent.GetComponent<CharacterPhysics>();
@@ -74,18 +77,34 @@ public class LedgeDetection : MonoBehaviour {
 								if (Physics.Raycast(topCheck.position, topCheck.rotation * Vector3.forward, out topHit, topCheckLength, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
 									Debug.DrawLine(topCheck.position, topCheck.position + (topCheck.rotation * Vector3.forward), Color.white);
 
-									character.ledgeHanging = true;
+									// Create and test the deny raycasts
+									RaycastHit[] denyHits = new RaycastHit[denyLedgeHangingRaycasts.Length];
+									int confirms = 0;
+									
+									for (int c = 0; c < denyLedgeHangingRaycasts.Length; c++) {
+										Transform rejecter = denyLedgeHangingRaycasts[c];
+										
+										if (Physics.Raycast(rejecter.position, rejecter.rotation * Vector3.forward, out denyHits[c], denyCheckLengths, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
+											confirms++;
+										}
+										
+										Debug.DrawLine(rejecter.position, rejecter.position + ((rejecter.rotation * Vector3.forward) * denyCheckLengths), Color.cyan);
+									}
 
-									character.ledgeNormal = finalLedgeNormal;
-									character.ledgeCharacterDir = forwardHit.normal;
-									character.ledgeObject = topHit.collider.gameObject;
-
-									body.useGravity = false;
-
-									body.velocity = Vector3.zero;
-
-									if (downwardHit.collider.attachedRigidbody != null) {
-										character.currentPlatform = downwardHit.collider.attachedRigidbody;
+									if (confirms == 0) {
+										character.ledgeHanging = true;
+										
+										character.ledgeNormal = finalLedgeNormal;
+										character.ledgeCharacterDir = forwardHit.normal;
+										character.ledgeObject = topHit.collider.gameObject;
+										
+										body.useGravity = false;
+										
+										body.velocity = Vector3.zero;
+										
+										if (downwardHit.collider.attachedRigidbody != null) {
+											character.currentPlatform = downwardHit.collider.attachedRigidbody;
+										}
 									}
 								}
 							}

@@ -176,6 +176,7 @@ Transform:
   - {fileID: 1752773282}
   - {fileID: 289716341}
   - {fileID: 1148925636}
+  - {fileID: 1327378116}
   m_Father: {fileID: 0}
   m_RootOrder: 8
 --- !u!1 &289716340
@@ -227,6 +228,10 @@ MonoBehaviour:
   downwardStartDistance: .699999988
   forwardDownOffset: .0500000007
   maxAngle: 30
+  denyLedgeHangingRaycasts:
+  - {fileID: 1804552522}
+  - {fileID: 1078330040}
+  denyCheckLengths: 1
 --- !u!1001 &476005848
 Prefab:
   m_ObjectHideFlags: 0
@@ -753,6 +758,7 @@ MonoBehaviour:
   confirmLedgeHangingRaycasts:
   - {fileID: 1625767059}
   - {fileID: 718423413}
+  denyLedgeHangingRaycasts: []
   checkerLengths: 1
   look: {fileID: 744326825}
   ledgeHanging: 0
@@ -1120,6 +1126,33 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 99b68578599a45f46a52596b600adab7, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1078330039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1078330040}
+  m_Layer: 2
+  m_Name: DenyLedgeCheck2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1078330040
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1078330039}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -.263999999, y: 0, z: .174999997}
+  m_LocalScale: {x: .20503512, y: 1, z: .69669342}
+  m_Children: []
+  m_Father: {fileID: 1327378116}
+  m_RootOrder: 1
 --- !u!1 &1148925635
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,6 +1182,35 @@ Transform:
   - {fileID: 718423413}
   m_Father: {fileID: 160881171}
   m_RootOrder: 5
+--- !u!1 &1327378115
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1327378116}
+  m_Layer: 0
+  m_Name: DenyLedgeCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1327378116
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1327378115}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.03199995, z: -.312000006}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1804552522}
+  - {fileID: 1078330040}
+  m_Father: {fileID: 160881171}
+  m_RootOrder: 6
 --- !u!1 &1437456037
 GameObject:
   m_ObjectHideFlags: 0
@@ -1657,6 +1719,33 @@ ConstantForce:
   m_RelativeForce: {x: 0, y: 0, z: 0}
   m_Torque: {x: 0, y: 0, z: 0}
   m_RelativeTorque: {x: 0, y: 0, z: 0}
+--- !u!1 &1804552521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1804552522}
+  m_Layer: 2
+  m_Name: DenyLedgeCheck1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1804552522
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1804552521}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: .263999999, y: -0, z: .174999997}
+  m_LocalScale: {x: .20503512, y: 1, z: .69669342}
+  m_Children: []
+  m_Father: {fileID: 1327378116}
+  m_RootOrder: 0
 --- !u!1 &2131024557
 GameObject:
   m_ObjectHideFlags: 0

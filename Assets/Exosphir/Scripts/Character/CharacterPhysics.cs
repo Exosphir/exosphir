@@ -37,6 +37,7 @@ public class CharacterPhysics : MonoBehaviour {
 	public float pushUpForce = 3.0f;
 	public Vector3 pushOffVector = new Vector3(0.0f, 1.0f, -1.0f);
 	public Transform[] confirmLedgeHangingRaycasts;
+	public Transform[] denyLedgeHangingRaycasts;
 	public float checkerLengths = 1.0f;
 	public CharacterLook look;
 
@@ -245,7 +246,7 @@ public class CharacterPhysics : MonoBehaviour {
 					pushOffLedge = false;
 				}
 			}
-		} else {
+		} else { // Ledge hanging = true
 			look.enabled = false;
 
 			// Set currentPlatform to ledgeObject if the ledgeObject has a rigidbody
