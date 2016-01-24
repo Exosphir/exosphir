@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Extensions;
 
 public class Continuity : MonoBehaviour {
 
@@ -10,13 +11,25 @@ public class Continuity : MonoBehaviour {
 	public LevelStatus currentStatus;
 	private LevelStatus oldCurrentStatus;
 
-	public GameObject player;
-    public GameObject playerCamera;
+	public GameObject playerPrefab;
+    public GameObject playerCameraPrefab;
+
+	private GameObject player;
+	private GameObject playerCamera;
 
     public GameObject origin;
 	public GameObject[] objectsToEnableOnEdit;
 
     private GameObject startFlag;
+
+	void Awake () {
+		player = GameObjectExtensions.PerserveNameOnInstantiate(playerPrefab, Vector3.zero, Quaternion.identity);
+		playerCamera = GameObjectExtensions.PerserveNameOnInstantiate(playerCameraPrefab, Vector3.zero, Quaternion.identity);
+
+		playerCamera.GetComponent<CharacterCamera>().target = player.GetComponentInChildren<CharacterLook>().transform;
+
+		DeactivatePlayer();
+	}
 
 	void Update () {
 		if (oldCurrentStatus != currentStatus) {
@@ -46,16 +59,14 @@ public class Continuity : MonoBehaviour {
 			obj.SetActive(true);
 		}
 
-		player.SetActive(false);
-        playerCamera.SetActive(false);
+		DeactivatePlayer();
 	}
 
 	public void Play () {
 		currentStatus = LevelStatus.Play;
 
 		ResetPlayer();
-		player.SetActive(true);
-        playerCamera.SetActive(true);
+		ActivatePlayer();
     }
 
 	public void Test () {
@@ -67,8 +78,7 @@ public class Continuity : MonoBehaviour {
 		}
 
 		ResetPlayer();
-		player.SetActive(true);
-        playerCamera.SetActive(true);
+		ActivatePlayer();
     }
 
 	void ResetPlayer () {
@@ -79,9 +89,9 @@ public class Continuity : MonoBehaviour {
 
         if (GameObject.FindWithTag("StartPoint") != null)
         {
-			//setting a reference to the flag to improve performance and reduce code length
+			// Setting a reference to the flag to improve performance and reduce code length
             startFlag = GameObject.FindWithTag("StartPoint");
-			//positioning and rotating the player to be in front and right under the cloth of the flag, and facing where the cloth faces.
+			// Positioning and rotating the player to be in front and right under the cloth of the flag, and facing where the cloth faces.
             playerBody.position = startFlag.transform.position;
 			playerBody.position += startFlag.transform.forward * 1f;
 			playerBody.position += startFlag.transform.up * 2f;
@@ -89,7 +99,7 @@ public class Continuity : MonoBehaviour {
         }
         else
         {
-			//default starting position.
+			// Default starting position.
             playerBody.position = Vector3.zero;
         }
 	}
@@ -102,5 +112,15 @@ public class Continuity : MonoBehaviour {
 		foreach (var behaviour in obj.GetComponents<MonoBehaviour>()) {
 			behaviour.enabled = enabledBoolean;
 		}
+	}
+
+	void ActivatePlayer () {
+		player.SetActive(true);
+		playerCamera.SetActive(true);
+	}
+
+	void DeactivatePlayer () {
+		player.SetActive(false);
+		playerCamera.SetActive(false);
 	}
 }
