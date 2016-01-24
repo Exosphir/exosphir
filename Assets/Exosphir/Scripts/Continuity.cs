@@ -11,8 +11,9 @@ public class Continuity : MonoBehaviour {
 	private LevelStatus oldCurrentStatus;
 
 	public GameObject player;
+    public GameObject playerCamera;
 
-	public GameObject origin;
+    public GameObject origin;
 	public GameObject[] objectsToEnableOnEdit;
 
     private GameObject startFlag;
@@ -46,6 +47,7 @@ public class Continuity : MonoBehaviour {
 		}
 
 		player.SetActive(false);
+        playerCamera.SetActive(false);
 	}
 
 	public void Play () {
@@ -53,7 +55,8 @@ public class Continuity : MonoBehaviour {
 
 		ResetPlayer();
 		player.SetActive(true);
-	}
+        playerCamera.SetActive(true);
+    }
 
 	public void Test () {
 		currentStatus = LevelStatus.Test;
@@ -65,7 +68,8 @@ public class Continuity : MonoBehaviour {
 
 		ResetPlayer();
 		player.SetActive(true);
-	}
+        playerCamera.SetActive(true);
+    }
 
 	void ResetPlayer () {
 		Rigidbody playerBody = player.GetComponent<Rigidbody>();
