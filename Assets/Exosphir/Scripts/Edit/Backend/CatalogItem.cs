@@ -18,11 +18,12 @@ namespace Edit.Backend {
         }
         
         public GameObject Model;
+		public float AnchorHeight = 1.25f;
         public PreviewImage PreviewImage;
         public string[] Groups;
         public bool Rotatable = true;
         public bool Scalable = true;
-        public bool Optimizable = false;
+		public bool Optimizable = false;
         public string[] OptimizationGroups;
         public int Id = -1;
         

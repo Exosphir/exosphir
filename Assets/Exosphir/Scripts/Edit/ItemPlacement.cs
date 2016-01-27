@@ -114,12 +114,15 @@ namespace Edit {
         }
 
         private void UpdateMouse() {
-            //update mouse in grid only when it actually is on the grid.
+			Vector3 currentAnchorHeight = (_currentItem != null)? (Vector3.up * _currentItem.AnchorHeight) : Vector3.zero;
+			Vector3 halfGrid = Vector3.up * (Grid.CellSize / 2);
+
+            // Update mouse in grid only when it actually is on the grid.
             var mousePosWorld = ScreenPointToGrid(Input.mousePosition);
             if (mousePosWorld.HasValue) {
                 MouseInGrid = _snap 
-                    ? Grid.Snap(mousePosWorld.Value + Vector3.up * (Grid.CellSize / 2))
-                    : mousePosWorld.Value;
+					? (Grid.Snap(mousePosWorld.Value + halfGrid) - halfGrid) + currentAnchorHeight
+					: mousePosWorld.Value + currentAnchorHeight;
             }
         }
 

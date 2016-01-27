@@ -65,33 +65,33 @@ public class LedgeDetection : MonoBehaviour {
 
 					if (angle <= maxAngle) {
 						if (Input.GetAxis("Vertical") > 0.0f) {
-							Rigidbody body = character.gameObject.GetComponent<Rigidbody>();
-							Vector3 vel = character.transform.InverseTransformVector(body.velocity);
-
-							if (Mathf.Sign(vel.y) > 0) {
-								if (Input.GetButtonDown("Jump")) {
-									character.pushOffLedge = true;
+							// Create and test the deny raycasts
+							RaycastHit[] denyHits = new RaycastHit[denyLedgeHangingRaycasts.Length];
+							int confirms = 0;
+							
+							for (int c = 0; c < denyLedgeHangingRaycasts.Length; c++) {
+								Transform rejecter = denyLedgeHangingRaycasts[c];
+								
+								if (Physics.Raycast(rejecter.position, rejecter.rotation * Vector3.forward, out denyHits[c], denyCheckLengths, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
+									confirms++;
 								}
-							} else if (Mathf.Sign(vel.y) < 0) {
-								RaycastHit topHit;
-								if (Physics.Raycast(topCheck.position, topCheck.rotation * Vector3.forward, out topHit, topCheckLength, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
-									Debug.DrawLine(topCheck.position, topCheck.position + (topCheck.rotation * Vector3.forward), Color.white);
+								
+								Debug.DrawLine(rejecter.position, rejecter.position + ((rejecter.rotation * Vector3.forward) * denyCheckLengths), Color.cyan);
+							}
 
-									// Create and test the deny raycasts
-									RaycastHit[] denyHits = new RaycastHit[denyLedgeHangingRaycasts.Length];
-									int confirms = 0;
-									
-									for (int c = 0; c < denyLedgeHangingRaycasts.Length; c++) {
-										Transform rejecter = denyLedgeHangingRaycasts[c];
-										
-										if (Physics.Raycast(rejecter.position, rejecter.rotation * Vector3.forward, out denyHits[c], denyCheckLengths, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
-											confirms++;
-										}
-										
-										Debug.DrawLine(rejecter.position, rejecter.position + ((rejecter.rotation * Vector3.forward) * denyCheckLengths), Color.cyan);
+							if (confirms == 0) {
+								Rigidbody body = character.gameObject.GetComponent<Rigidbody>();
+								Vector3 vel = character.transform.InverseTransformVector(body.velocity);
+
+								if (Mathf.Sign(vel.y) > 0) {
+									if (Input.GetButtonDown("Jump")) {
+										character.pushOffLedge = true;
 									}
+								} else if (Mathf.Sign(vel.y) < 0) {
+									RaycastHit topHit;
+									if (Physics.Raycast(topCheck.position, topCheck.rotation * Vector3.forward, out topHit, topCheckLength, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore)) {
+										Debug.DrawLine(topCheck.position, topCheck.position + (topCheck.rotation * Vector3.forward), Color.white);
 
-									if (confirms == 0) {
 										character.ledgeHanging = true;
 										
 										character.ledgeNormal = finalLedgeNormal;
@@ -109,6 +109,8 @@ public class LedgeDetection : MonoBehaviour {
 								}
 							}
 						}
+					} else {
+
 					}
 				}
 			}

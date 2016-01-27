@@ -37,7 +37,6 @@ public class CharacterPhysics : MonoBehaviour {
 	public float pushUpForce = 3.0f;
 	public Vector3 pushOffVector = new Vector3(0.0f, 1.0f, -1.0f);
 	public Transform[] confirmLedgeHangingRaycasts;
-	public Transform[] denyLedgeHangingRaycasts;
 	public float checkerLengths = 1.0f;
 	public CharacterLook look;
 

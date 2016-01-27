@@ -249,6 +249,20 @@ namespace Edit.Editor {
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Optimizable"),
                                           new GUIContent("Optimizable", "If enabled, model mesh will be substituted by optimized version during map load."));
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Model"), new GUIContent("Model"));
+
+			if (_currentItem.Model != null) {
+				GUILayout.BeginHorizontal();
+				EditorGUILayout.PropertyField(currentItemSerial.FindProperty("AnchorHeight"),
+				                              new GUIContent("Anchor Height", "Height above the grid the object will be located, free-placing or not."));
+				if (GUILayout.Button ("Calculate")) {
+					var newAnchorHeight = BlockUtilities.CalculateAnchorHeight(_currentItem.Model);
+					if (newAnchorHeight.HasValue) {
+						currentItemSerial.FindProperty("AnchorHeight").floatValue = newAnchorHeight.Value;
+					}
+				}
+				GUILayout.EndHorizontal();
+			}
+
             EditorGUILayout.PropertyField(currentItemSerial.FindProperty("Groups"),
                                           new GUIContent("Groups", "Internal groupings to determine various many-to-many relations"), true);
             if (_currentItem.Optimizable) {
