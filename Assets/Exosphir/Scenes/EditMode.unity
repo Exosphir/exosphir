@@ -1206,7 +1206,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -609
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.x
@@ -3509,7 +3509,7 @@ MonoBehaviour:
   - {fileID: 725807788}
   - {fileID: 2014592023}
   - {fileID: 759644098}
-  - {fileID: 1627252428}
+  - {fileID: 1280272152}
   - {fileID: 1209055801}
   - {fileID: 1852390984}
   - {fileID: 811221038}
