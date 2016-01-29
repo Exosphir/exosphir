@@ -1,18 +1,25 @@
 ﻿using UnityEngine;
+using Extensions;
 
 namespace Edit {
     public class Grid : MonoBehaviour {
         private static readonly Color GizmoColor = new Color(255, 64, 0);
         public float CellSize = 1f;
         public float BaseSize = 1f;
-        private Renderer _renderer;
 
-        void Start() {
-            _renderer = GetComponent<Renderer>();
-        }
+        public Renderer _renderer;
+
+		public Vector3 gridRotation;
+		public Vector3 gridCenter;
+		public Vector3 up { get; private set; }
 
         void Update() {
             _renderer.material.SetFloat("_CellSize", CellSize);
+
+			_renderer.transform.position = transform.position;
+			_renderer.transform.rotation = Quaternion.Euler(gridRotation);
+
+			up = _renderer.transform.up;
         }
 
         public Rect GetHorizontalPlaneRect() {
@@ -27,16 +34,24 @@ namespace Edit {
             return Mathf.Floor(value / CellSize) * CellSize;
         }
 
-        public Vector3 Snap(Vector3 position) {
+        public Vector3 Snap (Vector3 position) {
             var rect = GetHorizontalPlaneRect();
-            var snapX = Step(position.x);
-            var snapY = Step(position.y);
-            var snapZ = Step(position.z);
-            return new Vector3 {
-                x = Mathf.Clamp(snapX, rect.xMin, rect.xMax) + CellSize / 2f,
-                y = snapY + CellSize / 2f,
-                z = Mathf.Clamp(snapZ, rect.yMin, rect.yMax) + CellSize / 2f
-            };
+
+			Vector3 centerPosition = MatrixExtensions.RotatePoint(position - gridCenter, -gridRotation);
+
+            var snapX = Step(centerPosition.x);
+			var snapY = Step(centerPosition.y);
+			var snapZ = Step(centerPosition.z);
+
+			Vector3 snapVector = new Vector3 {
+				x = Mathf.Clamp(snapX, rect.xMin, rect.xMax) + CellSize / 2f,
+				y = snapY + CellSize / 2f,
+				z = Mathf.Clamp(snapZ, rect.yMin, rect.yMax) + CellSize / 2f
+			};
+
+			Vector3 snappedPosition = MatrixExtensions.RotatePoint(snapVector, gridRotation) + gridCenter;
+
+			return snappedPosition;
         }
 
         public bool SharingCell(Vector3 a, Vector3 b) {

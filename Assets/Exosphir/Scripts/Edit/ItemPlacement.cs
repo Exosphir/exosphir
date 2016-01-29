@@ -39,6 +39,9 @@ namespace Edit {
         [HideInInspector]
         public float Scale;
 
+		[HideInInspector]
+		public Vector3 GridRotationEuler;
+
         private bool _zoom, _snap;
         private bool _hasRotated;
         private bool _hasStepped;
@@ -52,7 +55,7 @@ namespace Edit {
 
         public Vector3? ScreenPointToGrid(Vector2 point) {
             var ray = _camera.Camera.ScreenPointToRay(point);
-            var plane = new Plane(Vector3.up, Vector3.up * CurrentFloorHeight);
+            var plane = new Plane(Grid.up, Vector3.up * CurrentFloorHeight);
 
             float distance;
             if (plane.Raycast(ray, out distance)) {
@@ -109,7 +112,7 @@ namespace Edit {
                 }
             }
             if (canPlace && !Input.GetButton(_input.orbitKey)) {
-                _world.PlaceItemAt(CatalogInterface.CurrentItem, MouseInGrid, Quaternion.Euler(ItemRotationEuler), Scale, _snap);
+                _world.PlaceItemAt(CatalogInterface.CurrentItem, MouseInGrid, Quaternion.Euler(ItemRotationEuler + Grid.gridRotation), Scale, _snap);
             }
         }
 
@@ -173,7 +176,7 @@ namespace Edit {
             }
 
             Cursor.transform.position = Vector3.Lerp(Cursor.transform.position, MouseInGrid, CursorDamping * Time.deltaTime);
-            Cursor.transform.rotation = Quaternion.Lerp(Cursor.transform.rotation, Quaternion.Euler(ItemRotationEuler), RotationDamping * Time.deltaTime);
+			Cursor.transform.rotation = Quaternion.Lerp(Cursor.transform.rotation, Quaternion.Euler(ItemRotationEuler + Grid.gridRotation), RotationDamping * Time.deltaTime);
             Cursor.transform.localScale = Vector3.Lerp(Cursor.transform.localScale, Vector3.one * Scale, ScaleDamping * Time.deltaTime);
         }
 

@@ -45,4 +45,5 @@ public sealed class ConfigurableInput : SingletonBehaviour<ConfigurableInput> {
 	public KeyCode rotateKey = KeyCode.R;
 	public KeyCode secondaryRotate = KeyCode.LeftShift;
 	public KeyCode scaleKey = KeyCode.C;
+	public KeyCode gridManipulation = KeyCode.G;
 }

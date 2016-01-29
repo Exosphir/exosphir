@@ -935,6 +935,68 @@ MonoBehaviour:
   - opaque
   Id: 5
   _category: {fileID: 355741785}
+--- !u!1 &650039916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 650039918}
+  - 33: {fileID: 650039919}
+  - 23: {fileID: 650039917}
+  m_Layer: 0
+  m_Name: GridPlane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &650039917
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 650039916}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: cd9ee033a2fd8624892cacc47e136a20, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!4 &650039918
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 650039916}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 20, y: 1, z: 20}
+  m_Children: []
+  m_Father: {fileID: 1280272153}
+  m_RootOrder: 0
+--- !u!33 &650039919
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 650039916}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &713229858
 GameObject:
   m_ObjectHideFlags: 0
@@ -1144,7 +1206,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22446562, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_SizeDelta.y
-      value: -610
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22458370, guid: cacb3e357458e4543aa04acb45ec072c, type: 2}
       propertyPath: m_AnchorMax.x
@@ -2280,6 +2342,35 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1272054333}
+--- !u!1 &1280272152
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1280272153}
+  m_Layer: 0
+  m_Name: Grid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1280272153
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1280272152}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 650039918}
+  - {fileID: 1627252432}
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
 --- !u!114 &1301920646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2460,6 +2551,7 @@ MonoBehaviour:
   rotateKey: 114
   secondaryRotate: 304
   scaleKey: 99
+  gridManipulation: 103
 --- !u!114 &1425560096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2619,51 +2711,16 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1627252432}
-  - 33: {fileID: 1627252431}
-  - 23: {fileID: 1627252429}
   - 114: {fileID: 1627252433}
   - 114: {fileID: 1627252434}
   - 114: {fileID: 1627252435}
   m_Layer: 0
-  m_Name: GridPlane
+  m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!23 &1627252429
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1627252428}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_Materials:
-  - {fileID: 2100000, guid: cd9ee033a2fd8624892cacc47e136a20, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: .5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!33 &1627252431
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1627252428}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &1627252432
 Transform:
   m_ObjectHideFlags: 0
@@ -2674,8 +2731,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 20, y: 1, z: 20}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1280272153}
+  m_RootOrder: 1
 --- !u!114 &1627252433
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2689,6 +2746,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CellSize: 2.5
   BaseSize: 10
+  _renderer: {fileID: 650039917}
+  gridRotation: {x: 0, y: 0, z: 0}
+  gridCenter: {x: 0, y: 0, z: 0}
 --- !u!114 &1627252434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2934,6 +2994,7 @@ MonoBehaviour:
   MouseInGrid: {x: 0, y: 0, z: 0}
   ItemRotationEuler: {x: 0, y: 0, z: 0}
   Scale: 0
+  GridRotationEuler: {x: 0, y: 0, z: 0}
 --- !u!1 &1948267684
 GameObject:
   m_ObjectHideFlags: 0
