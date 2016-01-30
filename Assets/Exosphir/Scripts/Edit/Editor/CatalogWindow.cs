@@ -30,6 +30,9 @@ namespace Edit.Editor {
 
 		private GameObject[] rigStuff;
 
+		// Window variables
+		private Vector2 windowScroll;
+
         public void OnFocus() {
             titleContent = new GUIContent("Catalog Editor");
             var newCatalogComponent = Catalog.GetInstance();
@@ -62,7 +65,9 @@ namespace Edit.Editor {
                 EditorGUILayout.HelpBox("No CatalogComponent present in scene, please add one and reopen the catalog editor.", MessageType.Warning);
                 return;
             }
-            GUILayout.BeginHorizontal(GUILayout.Width(WindowWidth));
+
+			windowScroll = GUILayout.BeginScrollView(windowScroll);
+			GUILayout.BeginHorizontal(GUILayout.Width(WindowWidth));
             GUILayout.BeginVertical(GUILayout.Width(WindowWidth / 3));
             EditorGUILayout.Space();
             if (GUILayout.Button(new GUIContent("Fix Catalog Leaks",
@@ -104,8 +109,9 @@ namespace Edit.Editor {
                 DrawItemDetail();
             }
             GUILayout.EndVertical();
-            
+
             GUILayout.EndHorizontal();
+			GUILayout.EndScrollView();
             _serializedCatalog.ApplyModifiedProperties();
         }
 
